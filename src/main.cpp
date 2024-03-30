@@ -1,6 +1,9 @@
+#include <cmath>
 #include "main.h"
 #include "globals.hpp"
 #include "constants.hpp"
+#include "mathutil.hpp"
+#include "drive.hpp"
 
 void initialize() {
     //Initialize drive motors
@@ -55,6 +58,26 @@ void autonomous() {
     
 }
 
-void opcontrol() {
+int map_input_to_power(double input) {
+    input /= 127; //Scale down to -1 to 1
+    input = sgn(input) * (input * input); //Map linear input to exponential output
+    input *= 12000; //Scale up to -12000mV to 12000mV
+    return input;
+}
 
+void opcontrol() {
+    set_brake_mode_drive(E_MOTOR_BRAKE_COAST);
+
+    while(true) {
+        int linear_input = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
+        int turn_input = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
+
+        int right_power = map_input_to_power(linear_input + turn_input);
+        int left_power = map_input_to_power(linear_input - turn_input);
+
+        move_voltage_right_drive(right_power);
+        move_voltage_left_drive(left_power);
+
+        delay(LOOP_DELAY);
+    }
 }
