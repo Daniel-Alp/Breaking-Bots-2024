@@ -23,7 +23,7 @@ void initialize() {
 
     //Initialize intake motor
     intake.set_gearing(E_MOTOR_GEAR_200);
-    intake.set_reversed(false);
+    intake.set_reversed(true);
 
     //Initialize hang motors
     hang1.set_gearing(E_MOTOR_GEAR_100);
