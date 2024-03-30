@@ -3,7 +3,7 @@
 #include "constants.hpp"
 
 void initialize() {
-    //Initialize drive motors 
+    //Initialize drive motors
 	r1.set_gearing(E_MOTOR_GEAR_600);
     r2.set_gearing(E_MOTOR_GEAR_600);
     r3.set_gearing(E_MOTOR_GEAR_600);
@@ -11,7 +11,7 @@ void initialize() {
     l2.set_gearing(E_MOTOR_GEAR_600);
     l3.set_gearing(E_MOTOR_GEAR_600);
 
-    r1.set_reversed(false);
+    r1.set_reversed(false); 
     r2.set_reversed(false);
     r3.set_reversed(false);
     l1.set_reversed(true);
@@ -39,13 +39,21 @@ void initialize() {
     while (imu.is_calibrating()) {
         delay(10);
     }
+
+    std::cout << "Done initializing!" << std::endl;
 }
 
-void disabled() {}
+void disabled() {
 
-void competition_initialize() {}
+}
 
-void autonomous() {}
+void competition_initialize() {
+
+}
+
+void autonomous() {
+    
+}
 
 void opcontrol() {
 

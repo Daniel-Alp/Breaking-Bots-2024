@@ -1,4 +1,5 @@
 #pragma once
+#include "main.h"
 
 void move_voltage_left_drive(int voltage);
 
