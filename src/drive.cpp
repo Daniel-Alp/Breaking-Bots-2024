@@ -1,5 +1,6 @@
 #include "main.h"
 #include "globals.hpp"
+#include "constants.hpp"
 #include "drive.hpp"
 
 //From -12000mV to 12000mV
@@ -23,4 +24,12 @@ void set_drive_brake_mode(motor_brake_mode_e_t mode) {
     l1.set_brake_mode(mode);
     l2.set_brake_mode(mode);
     l3.set_brake_mode(mode);
+}
+
+double get_position_left() {
+    return WHEEL_DIAM * PI * l1.get_position();
+}
+
+double get_position_right() {
+    return WHEEL_DIAM * PI * r1.get_position();
 }

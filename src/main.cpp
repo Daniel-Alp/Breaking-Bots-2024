@@ -22,7 +22,11 @@ void initialize() {
     l3.set_reversed(true);
 
     r1.set_encoder_units(E_MOTOR_ENCODER_ROTATIONS);
+    r2.set_encoder_units(E_MOTOR_ENCODER_ROTATIONS);
+    r3.set_encoder_units(E_MOTOR_ENCODER_ROTATIONS);
     l1.set_encoder_units(E_MOTOR_ENCODER_ROTATIONS);
+    l2.set_encoder_units(E_MOTOR_ENCODER_ROTATIONS);
+    l3.set_encoder_units(E_MOTOR_ENCODER_ROTATIONS);
 
     //Initialize intake motor
     intake.set_gearing(E_MOTOR_GEAR_200);
@@ -79,6 +83,6 @@ void opcontrol() {
         move_voltage_right_drive(right_power);
         move_voltage_left_drive(left_power);
 
-        delay(LOOP_DELAY);
+        delay(LOOP_DELAY_MS);
     }
 }
