@@ -26,10 +26,18 @@ void set_drive_brake_mode(motor_brake_mode_e_t mode) {
     l3.set_brake_mode(mode);
 }
 
-double get_position_left() {
-    return WHEEL_DIAM * PI * l1.get_position();
+double get_left_velocity() {
+    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * (l1.get_actual_velocity() / 60);
 }
 
-double get_position_right() {
-    return WHEEL_DIAM * PI * r1.get_position();
+double get_right_velocity() {
+    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * (r1.get_actual_velocity() / 60);
+}
+
+double get_left_position() {
+    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * l1.get_position();
+}
+
+double get_right_position() {
+    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * r1.get_position();
 }

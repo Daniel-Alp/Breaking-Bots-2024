@@ -18,4 +18,4 @@ std::vector<Segment> calculate_trajectory(double x_goal, double v_start, double 
 
 void move_straight(double x_goal, double v_start, double v_end);
 
-double calculate_power(double x, Segment& seg);
+double calculate_power(double error, double error_prev, double v, double a);

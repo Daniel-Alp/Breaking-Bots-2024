@@ -62,8 +62,8 @@ void move_straight(double x_goal, double v_start, double v_end) {
     for (int i = 0; i < traj.size(); i++) {
         Segment seg = traj[i];
 
-        right_error = seg.x - get_position_right();
-        left_error = seg.x - get_position_left();
+        right_error = seg.x - get_right_position();
+        left_error = seg.x - get_left_position();
 
         double left_power = calculate_power(left_error, left_error_prev, seg.v, seg.a);
         double right_power = calculate_power(right_error, right_error_prev, seg.v, seg.a);
