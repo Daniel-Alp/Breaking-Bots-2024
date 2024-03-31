@@ -25,9 +25,12 @@ std::vector<Segment> calculate_trajectory(double x_goal, double v_start, double 
     traj.reserve(t_total / LOOP_DELAY_SEC);
 
     double t = 0;
+    double x = 0;
     double v = 0;
     double v_prev = 0;
+    double a = 0;
 
+    //Note: if trajectories are not generated fast, we can calculate this on the fly.
     while (t <= t_total) {
         if (t <= t_speedup) {
             v += MAX_ACCELERATION * LOOP_DELAY_SEC;
@@ -37,8 +40,8 @@ std::vector<Segment> calculate_trajectory(double x_goal, double v_start, double 
             v -= MAX_ACCELERATION * LOOP_DELAY_SEC;
         }
 
-        double a = (v - v_prev) / LOOP_DELAY_SEC;
-        double x = (v + v_prev) * 0.5 * LOOP_DELAY_SEC;
+        a = (v - v_prev) / LOOP_DELAY_SEC;
+        x += (v + v_prev) * 0.5 * LOOP_DELAY_SEC;
         traj.emplace_back(x, v, a);
 
         v_prev = v;
@@ -80,7 +83,7 @@ void move_straight(double x_goal, double v_start, double v_end) {
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {
-    double kV = 1/MAX_VELOCITY;
+    double kV = 1/MAX_VELOCITY;    
     //Need to be tuned, there are procedures online for how to do this
     double kA = 0;
     double kP = 0;
