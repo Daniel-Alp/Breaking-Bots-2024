@@ -16,7 +16,7 @@ void move_voltage_left_drive(int voltage) {
     l3.move_voltage(voltage);
 }
 
-void set_brake_mode_drive(motor_brake_mode_e_t mode) {
+void set_drive_brake_mode(motor_brake_mode_e_t mode) {
     r1.set_brake_mode(mode);
     r2.set_brake_mode(mode);
     r3.set_brake_mode(mode);

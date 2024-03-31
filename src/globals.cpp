@@ -4,12 +4,12 @@
 Controller master(E_CONTROLLER_MASTER);
 
 //11W motors
-Motor r1(1);
-Motor r2(2);
-Motor r3(3);
-Motor l1(4);
-Motor l2(5);
-Motor l3(6);
+Motor r1(12);
+Motor r2(1);
+Motor r3(11);
+Motor l1(20);
+Motor l2(17);
+Motor l3(10);
 
 //5.5W motor
 Motor intake(7); 
@@ -19,4 +19,4 @@ Motor hang1(8);
 //5.5W motor
 Motor hang2(9);
 
-IMU imu(10);
+// IMU imu(10);
