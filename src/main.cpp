@@ -92,19 +92,15 @@ void opcontrol() {
             intake.move(0); 
         }
 
-        // comment
-
+        // Main driver code 
         int linear_input = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
         int turn_input = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
 
         int right_power = map_joystick_input_to_power(linear_input - turn_input);
         int left_power = map_joystick_input_to_power(linear_input + turn_input);
 
-        // Main driver code 
         move_voltage_right_drive(right_power);
         move_voltage_left_drive(left_power);
-
-
 
         delay(LOOP_DELAY_MS);
     }

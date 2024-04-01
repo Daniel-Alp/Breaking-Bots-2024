@@ -7,30 +7,7 @@
 
 void move_straight(double x_goal, double v_start, double v_end, bool reverse = false) {
     std::vector<Segment> traj = generate_trajectory(x_goal, v_start, v_end, reverse);
-
-    l1.tare_position();
-    r1.tare_position();
-    
-    double right_error = 0;
-    double left_error = 0;
-    double right_error_prev = 0;
-    double left_error_prev = 0;
-
-    for (int i = 0; i < traj.size(); i++) {
-        Segment seg = traj[i];
-
-        right_error = seg.x - get_right_position();
-        left_error = seg.x - get_left_position();
-
-        double left_power = calculate_power(left_error, left_error_prev, seg.v, seg.a);
-        double right_power = calculate_power(right_error, right_error_prev, seg.v, seg.a);
-
-        move_voltage_left_drive(left_power);
-        move_voltage_right_drive(right_power);
-
-        right_error_prev = right_error;
-        left_error_prev = left_error;
-    }
+    follow_trajectory(traj, traj);
 }
 
 std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v_end, bool reverse = false) {
@@ -84,6 +61,33 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
     std::cout << "Finished generating trajectory!" << std::endl;
 
     return traj;
+}
+
+void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& left_traj) {
+    r1.tare_position();
+    l1.tare_position();
+    
+    double right_error = 0;
+    double left_error = 0;
+    double right_error_prev = 0;
+    double left_error_prev = 0;
+
+    for (int i = 0; i < right_traj.size(); i++) {
+        Segment right_seg = right_traj[i];
+        Segment left_seg = left_traj[i];
+
+        right_error = right_seg.x - get_right_position();
+        left_error = right_seg.x - get_left_position();
+
+        double right_power = calculate_power(right_error, right_error_prev, right_seg.v, right_seg.a);
+        double left_power = calculate_power(left_error, left_error_prev, left_seg.v, left_seg.a);
+
+        move_voltage_right_drive(right_power);
+        move_voltage_left_drive(left_power);
+
+        right_error_prev = right_error;
+        left_error_prev = left_error;
+    }
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {
