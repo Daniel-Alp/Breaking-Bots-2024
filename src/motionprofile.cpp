@@ -5,7 +5,7 @@
 #include "globals.hpp"
 #include "drive.hpp"
 
-std::vector<Segment> calculate_trajectory(double x_goal, double v_start, double v_end) {
+std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v_end) {
     double v_reachable = std::sqrt(x_goal * MAX_ACCELERATION + 0.5 * v_start * v_start + 0.5 * v_end * v_end);
     double v_max = std::min(MAX_VELOCITY, v_reachable);
 
@@ -55,7 +55,7 @@ std::vector<Segment> calculate_trajectory(double x_goal, double v_start, double 
 
 //Currently only supports forwards movement, negative distances will be implemented later
 void move_straight(double x_goal, double v_start, double v_end) {
-    std::vector<Segment> traj = calculate_trajectory(x_goal, v_start, v_end);
+    std::vector<Segment> traj = generate_trajectory(x_goal, v_start, v_end);
 
     double right_error = 0;
     double left_error = 0;
@@ -77,9 +77,8 @@ void move_straight(double x_goal, double v_start, double v_end) {
         right_error_prev = right_error;
         left_error_prev = left_error;
     }
-    move_voltage_left_drive(0);
-    move_voltage_right_drive(0);
-    set_drive_brake_mode(E_MOTOR_BRAKE_HOLD);
+    move_voltage_left_drive(v_end);
+    move_voltage_right_drive(v_end);
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {

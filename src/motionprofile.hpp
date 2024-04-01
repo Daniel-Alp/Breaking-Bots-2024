@@ -14,7 +14,7 @@ struct Segment {
     }
 };
 
-std::vector<Segment> calculate_trajectory(double x_goal, double v_start, double v_end);
+std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v_end);
 
 void move_straight(double x_goal, double v_start, double v_end);
 
