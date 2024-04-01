@@ -84,9 +84,9 @@ void opcontrol() {
         print_data();
 
         // Intake controls 
-        if (master.get_digital(E_CONTROLLER_DIGITAL_!1)){
+        if (master.get_digital(E_CONTROLLER_DIGITAL_R1)){
             intake.move(-127); 
-        } else if (master.get_digital(E_CONTROLLER_DIGITAL_!2)){
+        } else if (master.get_digital(E_CONTROLLER_DIGITAL_R2)){
             intake.move(127); 
         } else {
             intake.move(0); 
