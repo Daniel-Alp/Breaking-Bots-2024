@@ -33,11 +33,11 @@ std::vector<Segment> calculate_trajectory(double x_goal, double v_start, double 
     //Note: if trajectories are not generated fast, we can calculate this on the fly.
     while (t <= t_total) {
         if (t <= t_speedup) {
-            v += MAX_ACCELERATION * LOOP_DELAY_SEC;
+            v = v_start + MAX_ACCELERATION * t;
         } else if (t <= t_speedup + t_cruise) {
             v = v_max;
         } else {
-            v -= MAX_ACCELERATION * LOOP_DELAY_SEC;
+            v = v_max - MAX_ACCELERATION * (t - t_speedup - t_cruise);
         }
 
         a = (v - v_prev) / LOOP_DELAY_SEC;
