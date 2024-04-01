@@ -14,8 +14,10 @@ struct Segment {
     }
 };
 
+void move_straight(double x_goal, double v_start, double v_end, bool reverse);
+
 std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v_end, bool reverse);
 
-void move_straight(double x_goal, double v_start, double v_end, bool reverse);
+void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& left_traj);
 
 double calculate_power(double error, double error_prev, double v, double a);
