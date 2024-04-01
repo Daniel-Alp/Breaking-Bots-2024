@@ -5,6 +5,37 @@
 #include "globals.hpp"
 #include "drive.hpp"
 
+//Currently only supports forwards movement, negative distances will be implemented later
+void move_straight(double x_goal, double v_start, double v_end) {
+    std::vector<Segment> traj = generate_trajectory(x_goal, v_start, v_end);
+
+    l1.tare_position();
+    r1.tare_position();
+    
+    double right_error = 0;
+    double left_error = 0;
+    double right_error_prev = 0;
+    double left_error_prev = 0;
+
+    for (int i = 0; i < traj.size(); i++) {
+        Segment seg = traj[i];
+
+        right_error = seg.x - get_right_position();
+        left_error = seg.x - get_left_position();
+
+        double left_power = calculate_power(left_error, left_error_prev, seg.v, seg.a);
+        double right_power = calculate_power(right_error, right_error_prev, seg.v, seg.a);
+
+        move_voltage_left_drive(left_power);
+        move_voltage_right_drive(right_power);
+
+        right_error_prev = right_error;
+        left_error_prev = left_error;
+    }
+    move_voltage_left_drive(v_end);
+    move_voltage_right_drive(v_end);
+}
+
 std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v_end) {
     double v_reachable = std::sqrt(x_goal * MAX_ACCELERATION + 0.5 * v_start * v_start + 0.5 * v_end * v_end);
     double v_max = std::min(MAX_VELOCITY, v_reachable);
@@ -51,34 +82,6 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
     std::cout << "Finished generating trajectory!" << std::endl;
 
     return traj;
-}
-
-//Currently only supports forwards movement, negative distances will be implemented later
-void move_straight(double x_goal, double v_start, double v_end) {
-    std::vector<Segment> traj = generate_trajectory(x_goal, v_start, v_end);
-
-    double right_error = 0;
-    double left_error = 0;
-    double right_error_prev = 0;
-    double left_error_prev = 0;
-
-    for (int i = 0; i < traj.size(); i++) {
-        Segment seg = traj[i];
-
-        right_error = seg.x - get_right_position();
-        left_error = seg.x - get_left_position();
-
-        double left_power = calculate_power(left_error, left_error_prev, seg.v, seg.a);
-        double right_power = calculate_power(right_error, right_error_prev, seg.v, seg.a);
-
-        move_voltage_left_drive(left_power);
-        move_voltage_right_drive(right_power);
-
-        right_error_prev = right_error;
-        left_error_prev = left_error;
-    }
-    move_voltage_left_drive(v_end);
-    move_voltage_right_drive(v_end);
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {
