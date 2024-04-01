@@ -71,6 +71,7 @@ int map_joystick_input_to_power(double input) {
 }
 
 void print_data() {
+    printf("time, %d, ", millis());
     printf("right pos, %.5f, ", get_right_position());
     printf("left pos, %.5f, ", get_left_position());
     printf("right vel, %.5f, ", get_right_velocity());
