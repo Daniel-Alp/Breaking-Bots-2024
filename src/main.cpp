@@ -83,14 +83,28 @@ void opcontrol() {
     while(true) {
         print_data();
 
+        // Intake controls 
+        if (master.get_digital(E_CONTROLLER_DIGITAL_!1)){
+            intake.move(-127); 
+        } else if (master.get_digital(E_CONTROLLER_DIGITAL_!2)){
+            intake.move(127); 
+        } else {
+            intake.move(0); 
+        }
+
+        // comment
+
         int linear_input = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
         int turn_input = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
 
         int right_power = map_joystick_input_to_power(linear_input - turn_input);
         int left_power = map_joystick_input_to_power(linear_input + turn_input);
 
+        // Main driver code 
         move_voltage_right_drive(right_power);
         move_voltage_left_drive(left_power);
+
+
 
         delay(LOOP_DELAY_MS);
     }
