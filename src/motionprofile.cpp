@@ -5,9 +5,8 @@
 #include "globals.hpp"
 #include "drive.hpp"
 
-//Currently only supports forwards movement, negative distances will be implemented later
-void move_straight(double x_goal, double v_start, double v_end) {
-    std::vector<Segment> traj = generate_trajectory(x_goal, v_start, v_end);
+void move_straight(double x_goal, double v_start, double v_end, bool reverse = false) {
+    std::vector<Segment> traj = generate_trajectory(x_goal, v_start, v_end, reverse);
 
     l1.tare_position();
     r1.tare_position();
@@ -32,11 +31,9 @@ void move_straight(double x_goal, double v_start, double v_end) {
         right_error_prev = right_error;
         left_error_prev = left_error;
     }
-    move_voltage_left_drive(v_end);
-    move_voltage_right_drive(v_end);
 }
 
-std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v_end) {
+std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v_end, bool reverse = false) {
     double v_reachable = std::sqrt(x_goal * MAX_ACCELERATION + 0.5 * v_start * v_start + 0.5 * v_end * v_end);
     double v_max = std::min(MAX_VELOCITY, v_reachable);
 
@@ -60,8 +57,7 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
     double v = 0;
     double v_prev = 0;
     double a = 0;
-
-    //Note: if trajectories are not generated fast, we can calculate this on the fly.
+    
     while (t <= t_total) {
         if (t <= t_speedup) {
             v = v_start + MAX_ACCELERATION * t;
@@ -73,11 +69,17 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
 
         a = (v - v_prev) / LOOP_DELAY_SEC;
         x += (v + v_prev) * 0.5 * LOOP_DELAY_SEC;
-        traj.emplace_back(x, v, a);
+
+        if (reverse) {
+            traj.emplace_back(-x, -v, -a);
+        } else {
+            traj.emplace_back(x, v, a);
+        }
 
         v_prev = v;
         t += LOOP_DELAY_SEC;
     }
+    traj.emplace_back(x_goal, v_end, (v_end - v_prev) / LOOP_DELAY_SEC);
 
     std::cout << "Finished generating trajectory!" << std::endl;
 
