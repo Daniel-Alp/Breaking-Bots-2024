@@ -25,7 +25,6 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
 
     double t_total = t_speedup + t_cruise + t_slowdown;
 
-
     std::vector<Segment> traj{};
     traj.reserve(t_total / LOOP_DELAY_SEC);
 
@@ -64,6 +63,8 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
 }
 
 void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& left_traj) {
+    double error_threshold = 0.5;
+    
     tare_position_drive();
     
     double right_error = 0;
@@ -93,7 +94,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
         if (i > right_traj.size() - 1) {
             i = right_traj.size() - 1;
         }
-    } while(!trajectory_finished(right_error, left_error));
+    } while(i < right_traj.size() || std::abs(left_error) > error_threshold || std::abs(right_error) > error_threshold);
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {
@@ -107,10 +108,4 @@ double calculate_power(double error, double error_prev, double v, double a) {
     double feedback = kP * error + kD * ((error - error_prev) / LOOP_DELAY_SEC);
 
     return (feedforward + feedback) * 12000;
-}
-
-bool trajectory_finished(double right_error, double left_error) {
-    double error_threshold = 0.5;
-    return std::abs(right_error) < error_threshold 
-        && std::abs(left_error) < error_threshold;
 }
