@@ -15,6 +15,8 @@ void move_voltage_right_drive(int voltage);
 
 void set_drive_brake_mode(motor_brake_mode_e_t mode);
 
+void tare_position_drive();
+
 double get_left_position();
 
 double get_left_velocity();

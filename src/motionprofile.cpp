@@ -64,8 +64,7 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
 }
 
 void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& left_traj) {
-    r1.tare_position();
-    l1.tare_position();
+    tare_position_drive();
     
     double right_error = 0;
     double left_error = 0;

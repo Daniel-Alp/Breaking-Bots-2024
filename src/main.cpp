@@ -48,6 +48,8 @@ void initialize() {
     //     delay(10);
     // }
 
+    tare_position_drive();
+
     std::cout << "Done initializing!" << std::endl;
 }
 

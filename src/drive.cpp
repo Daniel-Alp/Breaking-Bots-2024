@@ -26,6 +26,15 @@ void set_drive_brake_mode(motor_brake_mode_e_t mode) {
     l3.set_brake_mode(mode);
 }
 
+void tare_position_drive() {
+    r1.tare_position();
+    r2.tare_position();
+    r3.tare_position();
+    l1.tare_position();
+    l2.tare_position();
+    l3.tare_position();
+}
+
 double get_left_velocity() {
     return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * (l1.get_actual_velocity() / 60);
 }
