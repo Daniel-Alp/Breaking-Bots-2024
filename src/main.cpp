@@ -43,11 +43,10 @@ void initialize() {
     hang1.set_encoder_units(E_MOTOR_ENCODER_DEGREES);
 
     //Initialize IMU
-    //IMU code commented out for now because IMU is not plugged in
-    // imu.reset();
-    // while (imu.is_calibrating()) {
-    //     delay(10);
-    // }
+    imu.reset();
+    while (imu.is_calibrating()) {
+        delay(10);
+    }
 
     tare_position_drive();
 

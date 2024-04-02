@@ -9,4 +9,5 @@ void test_auton() {
     move_straight(24, 0, 0);
     move_straight(24, 0, 0);
     move_straight(24, 0, 0);
+    move_circular_arc(37.70, 0, 0, 0, 90);
 }

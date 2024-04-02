@@ -11,7 +11,7 @@ inline int sgn(double x) {
     return 0;
 }
 
-//Positive is counterclockwise, negative is clockwise
+//Positive is clockwise, negative is counterclockwise
 //Ranges from -180 to 180
 inline double get_heading_difference(double heading, double heading_goal) {
     double diff = heading_goal - heading;

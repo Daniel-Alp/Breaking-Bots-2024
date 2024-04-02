@@ -19,4 +19,4 @@ Motor hang1(8);
 //5.5W motor
 Motor hang2(9);
 
-// IMU imu(10);
+IMU imu(14);
