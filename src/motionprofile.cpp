@@ -99,7 +99,7 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
 }
 
 void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& left_traj) {
-    double error_threshold = 0.5;
+    double error_threshold = 0.5; //NEEDS TO BE TUNED
     double kP_turn = 0; //NEEDS TO BE TUNED
     
     tare_position_drive();
