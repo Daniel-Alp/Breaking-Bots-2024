@@ -71,7 +71,9 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
     double right_error_prev = 0;
     double left_error_prev = 0;
 
-    for (int i = 0; i < right_traj.size(); i++) {
+    int i = 0;
+
+    do {
         Segment right_seg = right_traj[i];
         Segment left_seg = left_traj[i];
 
@@ -86,7 +88,12 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
 
         right_error_prev = right_error;
         left_error_prev = left_error;
-    }
+
+        i++;
+        if (i > right_traj.size() - 1) {
+            i = right_traj.size() - 1;
+        }
+    } while(!trajectory_finished(right_error, left_error));
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {
@@ -100,4 +107,10 @@ double calculate_power(double error, double error_prev, double v, double a) {
     double feedback = kP * error + kD * ((error - error_prev) / LOOP_DELAY_SEC);
 
     return (feedforward + feedback) * 12000;
+}
+
+bool trajectory_finished(double right_error, double left_error) {
+    double error_threshold = 0.5;
+    return std::abs(right_error) < error_threshold 
+        && std::abs(left_error) < error_threshold;
 }

@@ -21,3 +21,5 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
 void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& left_traj);
 
 double calculate_power(double error, double error_prev, double v, double a);
+
+bool trajectory_finished(double right_error, double left_error);
