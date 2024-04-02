@@ -5,12 +5,12 @@
 #include "globals.hpp"
 #include "drive.hpp"
 
-void move_straight(double x_goal, double v_start, double v_end, bool reverse = false) {
+void move_straight(double x_goal, double v_start, double v_end, bool reverse) {
     std::vector<Segment> traj = generate_trajectory(x_goal, v_start, v_end, reverse);
     follow_trajectory(traj, traj);
 }
 
-std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v_end, bool reverse = false) {
+std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v_end, bool reverse) {
     double v_reachable = std::sqrt(x_goal * MAX_ACCELERATION + 0.5 * v_start * v_start + 0.5 * v_end * v_end);
     double v_max = std::min(MAX_VELOCITY, v_reachable);
 

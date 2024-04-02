@@ -4,6 +4,7 @@
 #include "constants.hpp"
 #include "mathutil.hpp"
 #include "drive.hpp"
+#include "auton.hpp"
 
 void initialize() {
     //Initialize drive motors
@@ -62,7 +63,7 @@ void competition_initialize() {
 }
 
 void autonomous() {
-    
+    test_auton();
 }
 
 int map_joystick_input_to_power(double input) {
