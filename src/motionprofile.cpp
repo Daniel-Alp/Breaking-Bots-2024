@@ -110,6 +110,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
     double left_error_prev = 0;
 
     int i = 0;
+    double time_elapsed_ms = 0;
 
     do {
         Segment right_seg = right_traj[i];
@@ -132,6 +133,14 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
         i++;
         if (i > right_traj.size() - 1) {
             i = right_traj.size() - 1;
+        }
+
+        delay(LOOP_DELAY_MS);
+        time_elapsed_ms += LOOP_DELAY_MS;
+        //Escape loop if we have spent 0.5s more on the motion than we should have. 
+        //Just in case the robot is almost at the goal position but not quite reaching it.
+        if (time_elapsed_ms > right_traj.size() * LOOP_DELAY_MS + 500) { 
+            break;
         }
     } while(i < right_traj.size() || std::abs(left_error) > error_threshold || std::abs(right_error) > error_threshold);
 }

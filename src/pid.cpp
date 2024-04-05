@@ -29,7 +29,7 @@ void turn_to_heading(double heading_goal) {
         move_voltage_left_drive(power);
 
         error_prev = error;
-        pros::delay(LOOP_DELAY_MS);
 
+        delay(LOOP_DELAY_MS);
     } while (std::abs(error) > error_threshold || get_left_velocity() > 5 || get_right_velocity() > 5);
 }

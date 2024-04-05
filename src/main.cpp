@@ -102,8 +102,7 @@ void opcontrol() {
         int right_power = map_joystick_input_to_power(linear_input - turn_input);
         int left_power = map_joystick_input_to_power(linear_input + turn_input);
 
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
-		{
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			right_power *= 0.44;
 			left_power *= 0.44;
 		}
