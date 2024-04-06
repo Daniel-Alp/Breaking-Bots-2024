@@ -113,7 +113,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
     double time_elapsed_ms = 0;
 
     //Log data for debugging and tuning.
-    FILE* log_file = fopen("/usd/motionprofile.csv", "w");
+    FILE* log_file = fopen("/usd/motion-profile-data.csv", "w");
     fprintf(log_file, "Time, Target Left Vel, Target Right Vel, Actual Left Vel, Actual Right Vel\n");
 
     do {
