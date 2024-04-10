@@ -44,9 +44,9 @@ void initialize() {
 
     //Initialize IMU
     imu.reset();
-    while (imu.is_calibrating()) {
-        delay(10);
-    }
+    // while (imu.is_calibrating()) {
+    //     delay(10);
+    // }
 
     tare_position_drive();
 
@@ -93,6 +93,18 @@ void opcontrol() {
             intake.move(127); 
         } else {
             intake.move(0); 
+        }
+
+        // Hang controls 
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+            hang1.move(127); 
+            hang2.move(-127); 
+        } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+            hang1.move(-127); 
+            hang2.move(127); 
+        } else {
+            hang1.move(0); 
+            hang2.move(0); 
         }
 
         // Main driver code 

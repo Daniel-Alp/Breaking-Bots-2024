@@ -12,11 +12,11 @@ Motor l2(17);
 Motor l3(10);
 
 //5.5W motor
-Motor intake(5); 
+Motor intake(13); 
 
 //11W motor
-Motor hang1(8); 
+Motor hang1(15); 
 //5.5W motor
-Motor hang2(9);
+Motor hang2(16);
 
 IMU imu(14);
