@@ -72,24 +72,14 @@ int map_joystick_input_to_power(double input) {
     return input;
 }
 
-void print_data() {
-    printf("time, %d, ", millis());
-    printf("right pos, %.5f, ", get_right_position());
-    printf("left pos, %.5f, ", get_left_position());
-    printf("right vel, %.5f, ", get_right_velocity());
-    printf("left vel, %.5f\n", get_left_velocity());
-}
-
 void opcontrol() {
     set_drive_brake_mode(E_MOTOR_BRAKE_COAST);
-
+    
     while(true) {
-        print_data();
-
         // Intake controls 
-        if (master.get_digital(E_CONTROLLER_DIGITAL_R1)){
+        if (master.get_digital(E_CONTROLLER_DIGITAL_L1)){
             intake.move(-127); 
-        } else if (master.get_digital(E_CONTROLLER_DIGITAL_R2)){
+        } else if (master.get_digital(E_CONTROLLER_DIGITAL_L2)){
             intake.move(127); 
         } else {
             intake.move(0); 
@@ -113,6 +103,11 @@ void opcontrol() {
 
         int right_power = map_joystick_input_to_power(linear_input - turn_input);
         int left_power = map_joystick_input_to_power(linear_input + turn_input);
+
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+			right_power *= 0.44;
+			left_power *= 0.44;
+		}
 
         move_voltage_right_drive(right_power);
         move_voltage_left_drive(left_power);
