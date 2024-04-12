@@ -1,4 +1,5 @@
 #include "main.h"
+#include "pros/adi.hpp"
 #include "globals.hpp"
 
 Controller master(E_CONTROLLER_MASTER);
@@ -20,3 +21,8 @@ Motor hang1(15);
 Motor hang2(16);
 
 IMU imu(14);
+
+// Pneumatics objects
+pros::adi::DigitalOut ratchet('G');
+pros::adi::DigitalOut leftWing('A'); 
+pros::adi::DigitalOut rightWing('F'); 

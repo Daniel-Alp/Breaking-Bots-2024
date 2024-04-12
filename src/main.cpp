@@ -5,6 +5,10 @@
 #include "mathutil.hpp"
 #include "drive.hpp"
 #include "auton.hpp"
+#include "pros/misc.h"
+
+const float PRESET_BICEP_ANGLE = 100; 
+const float PRESET_SIDE_HANG_ANGLE = 100; 
 
 void initialize() {
     //Initialize drive motors
@@ -50,6 +54,9 @@ void initialize() {
 
     tare_position_drive();
 
+    hang1.set_encoder_units(E_MOTOR_ENCODER_DEGREES); 
+    hang1.tare_position();  
+
     std::cout << "Done initializing!" << std::endl;
 }
 
@@ -75,6 +82,9 @@ int map_joystick_input_to_power(double input) {
 void opcontrol() {
     set_drive_brake_mode(E_MOTOR_BRAKE_COAST);
     
+    bool ratchetActive = false; // If set to true then the ratchet is active, if set to false then the ratchet is not currently engaged 
+    bool wingsActive = false; // If set to true then both wings will be triggered, otherwise both in
+
     while(true) {
         // Intake controls 
         if (master.get_digital(E_CONTROLLER_DIGITAL_L1)){
@@ -83,6 +93,28 @@ void opcontrol() {
             intake.move(127); 
         } else {
             intake.move(0); 
+        }
+
+        // Ratchet Activation 
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
+            ratchetActive = !ratchetActive; 
+        }        
+        if (ratchetActive){
+            ratchet.set_value(1); 
+        } else {
+            ratchet.set_value(0); 
+        }
+        
+        // Wings Activation 
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
+            wingsActive = !wingsActive; 
+        }
+        if (wingsActive){
+            leftWing.set_value(1); 
+            rightWing.set_value(1); 
+        } else {
+            leftWing.set_value(0); 
+            rightWing.set_value(0); 
         }
 
         // Hang controls 
@@ -111,7 +143,7 @@ void opcontrol() {
 
         move_voltage_right_drive(right_power);
         move_voltage_left_drive(left_power);
-
+                                                                                                                                                                                                                                                                                                                                                                                             
         delay(LOOP_DELAY_MS);
     }
 }

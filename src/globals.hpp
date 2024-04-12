@@ -1,5 +1,6 @@
 #pragma once
 #include "main.h"
+#include "pros/adi.hpp"
 
 using namespace pros;
 
@@ -18,3 +19,7 @@ extern Motor hang2;
 extern Motor intake;
 
 extern IMU imu;
+
+extern pros::adi::DigitalOut leftWing; 
+extern pros::adi::DigitalOut rightWing; 
+extern pros::adi::DigitalOut ratchet; 
