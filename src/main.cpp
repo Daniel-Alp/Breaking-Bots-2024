@@ -6,6 +6,7 @@
 #include "drive.hpp"
 #include "auton.hpp"
 #include "pros/misc.h"
+#include "hang.hpp"
 
 const float PRESET_BICEP_ANGLE = 100; 
 const float PRESET_SIDE_HANG_ANGLE = 100; 
@@ -44,7 +45,6 @@ void initialize() {
     hang1.set_reversed(false);
     hang2.set_reversed(true);
 
-    hang1.set_encoder_units(E_MOTOR_ENCODER_DEGREES);
 
     //Initialize IMU
     imu.reset();
@@ -55,7 +55,9 @@ void initialize() {
     tare_position_drive();
 
     hang1.set_encoder_units(E_MOTOR_ENCODER_DEGREES); 
-    hang1.tare_position();  
+    hang1.tare_position();
+    hang2.set_encoder_units(E_MOTOR_ENCODER_DEGREES); 
+    hang2.tare_position();  
 
     std::cout << "Done initializing!" << std::endl;
 }
@@ -127,6 +129,12 @@ void opcontrol() {
         } else {
             hang1.move(0); 
             hang2.move(0); 
+        }
+        if(master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+            hang_pd(90);
+        }
+        if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+            hang_pd(180);
         }
 
         // Main driver code 
