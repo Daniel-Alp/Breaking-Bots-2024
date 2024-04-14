@@ -5,9 +5,9 @@
 
 //From -12000mV to 12000mV
 void move_voltage_right_drive(int voltage) {
-    r1.move_voltage(voltage);
-    r2.move_voltage(voltage);
-    r3.move_voltage(voltage);
+    r1.move_voltage(voltage * 0.94);
+    r2.move_voltage(voltage * 0.94);
+    r3.move_voltage(voltage * 0.94);
 }
 
 //From -12000mV to 12000mV
