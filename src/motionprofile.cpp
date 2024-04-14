@@ -7,6 +7,7 @@
 #include "mathutil.hpp"
 
 void move_straight(double x_goal, double v_start, double v_end, bool reverse) {
+    std::cout << "move_straight() was called!" << std::endl;
     double heading = imu.get_heading();
     std::vector<Segment> traj = generate_trajectory(x_goal, v_start, v_end, heading, heading, reverse);
     follow_trajectory(traj, traj);
@@ -39,6 +40,8 @@ void move_circular_arc(double x_goal, double v_start, double v_end, double headi
 }
 
 std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v_end, double heading_start, double heading_end, bool reverse) {
+    std::cout << "Started generating trajectory!" << std::endl;
+
     double v_reachable = std::sqrt(x_goal * MAX_ACCELERATION + 0.5 * v_start * v_start + 0.5 * v_end * v_end);
     double v_max = std::min(MAX_VELOCITY, v_reachable);
 
@@ -76,6 +79,8 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
 
         a = (v - v_prev) / LOOP_DELAY_SEC;
         x += (v + v_prev) * 0.5 * LOOP_DELAY_SEC;
+
+        std::cout << "x " << x << " v " << v << " a " << a << std::endl; 
         
         heading = heading_start + heading_diff * t / t_total; 
         if (heading < 0) {
@@ -113,8 +118,8 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
     double time_elapsed_ms = 0;
 
     //Log data for debugging and tuning.
-    FILE* log_file = fopen("/usd/motion-profile-data.csv", "w");
-    fprintf(log_file, "Time, Target Left Vel, Target Right Vel, Actual Left Vel, Actual Right Vel\n");
+    // FILE* log_file = fopen("/usd/motion-profile-data.txt", "w");
+    // fprintf(log_file, "Time, Target Left Vel, Target Right Vel, Actual Left Vel, Actual Right Vel\n");
 
     do {
         Segment right_seg = right_traj[i];
@@ -147,10 +152,10 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
             break;
         }
 
-        fprintf(log_file, "%f, %f, %f, %f, %f\n", time_elapsed_ms, right_traj[i], left_traj[i], get_right_velocity(), get_left_velocity());
+        // fprintf(log_file, "%f, %f, %f, %f, %f\n", time_elapsed_ms, right_traj[i], left_traj[i], get_right_velocity(), get_left_velocity());
     } while(i < right_traj.size() || std::abs(left_error) > error_threshold || std::abs(right_error) > error_threshold);
 
-    fclose(log_file);
+    // fclose(log_file);
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {

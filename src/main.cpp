@@ -48,9 +48,9 @@ void initialize() {
 
     //Initialize IMU
     imu.reset();
-    // while (imu.is_calibrating()) {
-    //     delay(10);
-    // }
+    while (imu.is_calibrating()) {
+        delay(10);
+    }
 
     tare_position_drive();
 
