@@ -118,8 +118,8 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
     double time_elapsed_ms = 0;
 
     //Log data for debugging and tuning.
-    // FILE* log_file = fopen("/usd/motion-profile-data.txt", "w");
-    // fprintf(log_file, "Time, Target Left Vel, Target Right Vel, Actual Left Vel, Actual Right Vel\n");
+    FILE* log_file = fopen("/usd/motion-profile-data.txt", "w");
+    fprintf(log_file, "Time, Target Left Vel, Target Right Vel, Actual Left Vel, Actual Right Vel\n");
 
     do {
         Segment right_seg = right_traj[i];
@@ -152,10 +152,10 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
             break;
         }
 
-        // fprintf(log_file, "%f, %f, %f, %f, %f\n", time_elapsed_ms, right_traj[i], left_traj[i], get_right_velocity(), get_left_velocity());
+        fprintf(log_file, "%f, %f, %f, %f, %f\n", time_elapsed_ms, right_traj[i].v, left_traj[i].v, get_right_velocity(), get_left_velocity());
     } while(i < right_traj.size() || std::abs(left_error) > error_threshold || std::abs(right_error) > error_threshold);
 
-    // fclose(log_file);
+    fclose(log_file);
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {
