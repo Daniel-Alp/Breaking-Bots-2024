@@ -7,12 +7,12 @@
 #include "pid.hpp"
 
 void test_auton() {
-    FILE* log_file = fopen("/usd/drive-data.csv", "w");
+    FILE* log_file = fopen("/usd/drive-data.txt", "w");
     fprintf(log_file, "Time, Right Pos, Left Pos, Right Vel, Left Vel\n");
 
     double time_elapsed_ms = 0;
 
-    while (time_elapsed_ms <= 5000) //It won't take longer than 5 seconds to reach max speed
+    while (time_elapsed_ms <= 3000) //It won't take longer than 5 seconds to reach max speed
     {
         move_voltage_left_drive(12000);
         move_voltage_right_drive(12000);
