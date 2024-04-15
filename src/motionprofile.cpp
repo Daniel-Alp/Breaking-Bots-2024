@@ -119,6 +119,8 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
     double time_elapsed_ms = 0;
 
     //Log data for debugging and tuning.
+    //The SD card MUST be plugged in otherwise will get Data Abortion Exception
+    //As an alternative, comment out code below and the fprintf() in loop and the fclose()
     FILE* log_file = fopen("/usd/motion-profile-data.txt", "w");
     fprintf(log_file, "Time, Target Left Vel, Target Right Vel, Actual Left Vel, Actual Right Vel\n");
 
@@ -155,6 +157,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
 
         fprintf(log_file, "%f, %f, %f, %f, %f\n", time_elapsed_ms, right_traj[i].v, left_traj[i].v, get_right_velocity(), get_left_velocity());
     } while(i < right_traj.size() || std::abs(left_error) > error_threshold || std::abs(right_error) > error_threshold);
+    //I have a suspicioun that if I were to disable the pd constants then backwards movement would start working. For some reason they are causing trouble...
 
     fclose(log_file);
 }
@@ -163,7 +166,7 @@ double calculate_power(double error, double error_prev, double v, double a) {
     double kV = 1/MAX_VELOCITY;
     //NEEDS TO BE TUNED, THERE ARE PROCEDURES ONLINE FOR HOW TO DO THIS
     double kA = 0.35/MAX_ACCELERATION; //This value works quite well
-    double kP = 0.04;
+    double kP = 0.04; //0.05 also worked well
     double kD = 0.02;
 
     double feedforward = kV * v + kA * a;
