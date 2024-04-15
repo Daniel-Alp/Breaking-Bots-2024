@@ -162,7 +162,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
 double calculate_power(double error, double error_prev, double v, double a) {
     double kV = 1/MAX_VELOCITY;    
     //NEEDS TO BE TUNED, THERE ARE PROCEDURES ONLINE FOR HOW TO DO THIS
-    double kA = 0.25/MAX_ACCELERATION;
+    double kA = 0.3/MAX_ACCELERATION;
     double kP = 0;
     double kD = 0;
 
