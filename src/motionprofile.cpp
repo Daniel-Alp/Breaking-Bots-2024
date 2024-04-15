@@ -96,7 +96,8 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
         v_prev = v;
         t += LOOP_DELAY_SEC;
     }
-    traj.emplace_back(x_goal, v_end, (v_end - v_prev) / LOOP_DELAY_SEC, heading_end);
+    traj.emplace_back(x_goal, v_end, 0, heading_end);
+
 
     std::cout << "Finished generating trajectory!" << std::endl;
 
@@ -161,7 +162,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
 double calculate_power(double error, double error_prev, double v, double a) {
     double kV = 1/MAX_VELOCITY;    
     //NEEDS TO BE TUNED, THERE ARE PROCEDURES ONLINE FOR HOW TO DO THIS
-    double kA = 0;
+    double kA = 0.25/MAX_ACCELERATION;
     double kP = 0;
     double kD = 0;
 
