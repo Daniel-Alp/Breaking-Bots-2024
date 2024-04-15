@@ -167,7 +167,7 @@ double calculate_power(double error, double error_prev, double v, double a) {
     //NEEDS TO BE TUNED, THERE ARE PROCEDURES ONLINE FOR HOW TO DO THIS
     double kA = 0.35/MAX_ACCELERATION; //This value works quite well
     double kP = 0.04; //0.05 also worked well
-    double kD = 0.02;
+    double kD = 0.0002;
 
     double feedforward = kV * v + kA * a;
     double feedback = kP * error + kD * ((error - error_prev) / LOOP_DELAY_SEC);

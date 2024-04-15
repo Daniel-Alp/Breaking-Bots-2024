@@ -36,17 +36,17 @@ void tare_position_drive() {
 }
 
 double get_left_velocity() {
-    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * (l1.get_actual_velocity() / 60);
+    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * (l2.get_actual_velocity() / 60);
 }
 
 double get_right_velocity() {
-    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * (r1.get_actual_velocity() / 60);
+    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * (r2.get_actual_velocity() / 60);
 }
 
 double get_left_position() {
-    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * l1.get_position();
+    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * l2.get_position();
 }
 
 double get_right_position() {
-    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * r1.get_position();
+    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * r2.get_position();
 }
