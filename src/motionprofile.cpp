@@ -79,9 +79,7 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
 
         a = (v - v_prev) / LOOP_DELAY_SEC;
         x += (v + v_prev) * 0.5 * LOOP_DELAY_SEC;
-
-        std::cout << "x " << x << " v " << v << " a " << a << std::endl; 
-        
+                
         heading = heading_start + heading_diff * t / t_total; 
         if (heading < 0) {
             heading += 360;
@@ -96,8 +94,11 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
         v_prev = v;
         t += LOOP_DELAY_SEC;
     }
-    traj.emplace_back(x_goal, v_end, 0, heading_end);
-
+    if (reverse) {
+        traj.emplace_back(-x, -v, 0, heading_end);
+    } else {
+        traj.emplace_back(x, v, 0, heading_end);
+    }
 
     std::cout << "Finished generating trajectory!" << std::endl;
 
@@ -167,7 +168,7 @@ double calculate_power(double error, double error_prev, double v, double a) {
     //NEEDS TO BE TUNED, THERE ARE PROCEDURES ONLINE FOR HOW TO DO THIS
     double kA = 0.35/MAX_ACCELERATION; //This value works quite well
     double kP = 0.04; //0.05 also worked well
-    double kD = 0.0002;
+    double kD = 0.00002;
 
     double feedforward = kV * v + kA * a;
     double feedback = kP * error + kD * ((error - error_prev) / LOOP_DELAY_SEC);
