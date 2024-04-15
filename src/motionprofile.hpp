@@ -16,7 +16,7 @@ struct Segment {
     }
 };
 
-void move_straight(double x_goal, double v_start, double v_end, bool reverse = false);
+void move_straight(double x_goal, double v_start, double v_end, double heading, bool reverse = false);
 
 void move_circular_arc(double x_goal, double v_start, double v_end, double heading_start, double heading_end, bool reverse = false);
 

@@ -26,11 +26,10 @@ void test_auton() {
     
 
     // //Specify is reversed or not, default is not reversed.
-    move_straight(48, 0, 0);
-    // move_straight(72, 0, 0, true);
-    move_straight(24, 0, 0, true);
-    // move_straight(24, 0, 0, true);
-    // move_straight(24, 0, 0);
-    // move_straight(72, 0, 0, true);
-    // move_circular_arc(37.70, 0, 0, 0, 90);
+    move_straight(72, 0, 0, 0);
+    move_straight(72, 0, 0, 0, true);
+    move_straight(24, 0, 0, 0);
+    move_straight(24, 0, 0, 0);
+    move_straight(48, 0, 0, 0, true);
+    // move_circular_arc(28.27, 0, 0, 0, 90);
 }

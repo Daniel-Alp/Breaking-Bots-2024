@@ -6,9 +6,8 @@
 #include "drive.hpp"
 #include "mathutil.hpp"
 
-void move_straight(double x_goal, double v_start, double v_end, bool reverse) {
+void move_straight(double x_goal, double v_start, double v_end, double heading, bool reverse) {
     std::cout << "move_straight() was called!" << std::endl;
-    double heading = imu.get_heading();
     std::vector<Segment> traj = generate_trajectory(x_goal, v_start, v_end, heading, heading, reverse);
     follow_trajectory(traj, traj);
 }
@@ -107,7 +106,7 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
 
 void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& left_traj) {
     double error_threshold = 0.5; //NEEDS TO BE TUNED
-    double kP_turn = 0; //NEEDS TO BE TUNED
+    double kP_turn = 0.002; //NEEDS TO BE TUNED
     
     tare_position_drive();
     
@@ -123,7 +122,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
     //The SD card MUST be plugged in otherwise will get Data Abortion Exception
     //As an alternative, comment out code below and the fprintf() in loop and the fclose()
     FILE* log_file = fopen("/usd/motion-profile-data.txt", "w");
-    fprintf(log_file, "Time, Target Left Vel, Target Right Vel, Actual Left Vel, Actual Right Vel\n");
+    fprintf(log_file, "Time, Target Left Vel, Target Right Vel, Actual Left Vel, Actual Right Vel, Target Heading, Actual Heading\n");
 
     do {
         Segment right_seg = right_traj[i];
@@ -135,7 +134,8 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
         double right_power = calculate_power(right_error, right_error_prev, right_seg.v, right_seg.a);
         double left_power = calculate_power(left_error, left_error_prev, left_seg.v, left_seg.a);
 
-        double turn_power = kP_turn * get_heading_difference(imu.get_heading(), right_seg.heading);
+        double heading = imu.get_heading();
+        double turn_power = kP_turn * get_heading_difference(heading, right_seg.heading) * 12000; //Scale up to -12000mV to 12000mV
 
         move_voltage_right_drive(right_power - turn_power);
         move_voltage_left_drive(left_power + turn_power);
@@ -156,9 +156,8 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
             break;
         }
 
-        fprintf(log_file, "%f, %f, %f, %f, %f\n", time_elapsed_ms, right_traj[i].v, left_traj[i].v, get_right_velocity(), get_left_velocity());
+        fprintf(log_file, "%f, %f, %f, %f, %f, %f, %f\n", time_elapsed_ms, right_seg.v, left_seg.v, get_right_velocity(), get_left_velocity(), right_seg.heading, heading);
     } while(i < right_traj.size() || std::abs(left_error) > error_threshold || std::abs(right_error) > error_threshold);
-    //I have a suspicioun that if I were to disable the pd constants then backwards movement would start working. For some reason they are causing trouble...
 
     fclose(log_file);
 }
@@ -168,7 +167,7 @@ double calculate_power(double error, double error_prev, double v, double a) {
     //NEEDS TO BE TUNED, THERE ARE PROCEDURES ONLINE FOR HOW TO DO THIS
     double kA = 0.35/MAX_ACCELERATION; //This value works quite well
     double kP = 0.04; //0.05 also worked well
-    double kD = 0.00002;
+    double kD = 0.012;
 
     double feedforward = kV * v + kA * a;
     double feedback = kP * error + kD * ((error - error_prev) / LOOP_DELAY_SEC);
