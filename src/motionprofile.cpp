@@ -160,11 +160,11 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {
-    double kV = 1/MAX_VELOCITY;    
+    double kV = 1/MAX_VELOCITY;
     //NEEDS TO BE TUNED, THERE ARE PROCEDURES ONLINE FOR HOW TO DO THIS
-    double kA = 0.3/MAX_ACCELERATION;
-    double kP = 0;
-    double kD = 0;
+    double kA = 0.35/MAX_ACCELERATION; //This value works quite well
+    double kP = 0.04;
+    double kD = 0.02;
 
     double feedforward = kV * v + kA * a;
     double feedback = kP * error + kD * ((error - error_prev) / LOOP_DELAY_SEC);

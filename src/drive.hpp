@@ -2,8 +2,8 @@
 #include "main.h"
 
 //Need to be measured and tuned. 
-const double MAX_VELOCITY = 75; // in/s (a max velocity of 79.26in/s was measured but we are giving a small buffer)
-const double MAX_ACCELERATION = 150; // in/s^2 (an acceleration of 0.12in/s and 0.18in/s was measured)
+const double MAX_VELOCITY = 70; // in/s (a max velocity of 79.26in/s)
+const double MAX_ACCELERATION = 130; // in/s^2 (an acceleration of 12in/s and 18in/s was measured depending on how many points were used for regression)
 
 const double DRIVE_WIDTH = 15; // in (distance between where middle wheels touch the floor). Needs to be measured.
 const double WHEEL_DIAM = 3.25; // in
