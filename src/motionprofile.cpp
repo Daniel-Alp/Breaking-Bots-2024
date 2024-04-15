@@ -7,7 +7,6 @@
 #include "mathutil.hpp"
 
 void move_straight(double x_goal, double v_start, double v_end, double heading, bool reverse) {
-    std::cout << "move_straight() was called!" << std::endl;
     std::vector<Segment> traj = generate_trajectory(x_goal, v_start, v_end, heading, heading, reverse);
     follow_trajectory(traj, traj);
 }
@@ -75,7 +74,6 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
         } else {
             v = v_max - MAX_ACCELERATION * (t - t_speedup - t_cruise);
         }
-
         a = (v - v_prev) / LOOP_DELAY_SEC;
         x += (v + v_prev) * 0.5 * LOOP_DELAY_SEC;
                 
@@ -84,29 +82,27 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
             heading += 360;
         }
 
-        if (reverse) {
-            traj.emplace_back(-x, -v, -a, heading);
-        } else {
-            traj.emplace_back(x, v, a, heading);
-        }
+        traj.emplace_back(x, v, a, heading);
 
         v_prev = v;
         t += LOOP_DELAY_SEC;
     }
-    if (reverse) {
-        traj.emplace_back(-x, -v, 0, heading_end);
-    } else {
-        traj.emplace_back(x, v, 0, heading_end);
-    }
+    traj.emplace_back(x, v, 0, heading_end);
 
-    std::cout << "Finished generating trajectory!" << std::endl;
+    if (reverse) {
+        for (Segment& seg : traj) {
+            seg.x *= -1;
+            seg.v *= -1;
+            seg.a *= -1;
+        }
+    }
 
     return traj;
 }
 
 void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& left_traj) {
-    double error_threshold = 0.5; //NEEDS TO BE TUNED
-    double kP_turn = 0.002; //NEEDS TO BE TUNED
+    double error_threshold = 0.5;
+    double kP_turn = 0.002;
     
     tare_position_drive();
     
@@ -118,11 +114,9 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
     int i = 0;
     double time_elapsed_ms = 0;
 
-    //Log data for debugging and tuning.
-    //The SD card MUST be plugged in otherwise will get Data Abortion Exception
-    //As an alternative, comment out code below and the fprintf() in loop and the fclose()
+    //The SD card must be plugged in, otherwise will get Data Abortion Exception
     FILE* log_file = fopen("/usd/motion-profile-data.txt", "w");
-    fprintf(log_file, "Time, Target Left Vel, Target Right Vel, Actual Left Vel, Actual Right Vel, Target Heading, Actual Heading\n");
+    fprintf(log_file, "Time, Target Left Vel, Actual Left Vel, Target Right Vel, Actual Right Vel, Target Heading, Actual Heading\n");
 
     do {
         Segment right_seg = right_traj[i];
@@ -135,7 +129,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
         double left_power = calculate_power(left_error, left_error_prev, left_seg.v, left_seg.a);
 
         double heading = imu.get_heading();
-        double turn_power = kP_turn * get_heading_difference(heading, right_seg.heading) * 12000; //Scale up to -12000mV to 12000mV
+        double turn_power = kP_turn * get_heading_difference(heading, right_seg.heading) * 12000;
 
         move_voltage_right_drive(right_power - turn_power);
         move_voltage_left_drive(left_power + turn_power);
@@ -156,17 +150,26 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
             break;
         }
 
-        fprintf(log_file, "%f, %f, %f, %f, %f, %f, %f\n", time_elapsed_ms, right_seg.v, left_seg.v, get_right_velocity(), get_left_velocity(), right_seg.heading, heading);
-    } while(i < right_traj.size() || std::abs(left_error) > error_threshold || std::abs(right_error) > error_threshold);
+        fprintf(log_file, "%f, %f, %f, %f, %f, %f, %f\n", 
+            time_elapsed_ms, 
+            left_seg.v,  
+            get_left_velocity(), 
+            right_seg.v,
+            get_right_velocity(), 
+            right_seg.heading, 
+            heading);
+
+    } while(i < right_traj.size() 
+            || std::abs(left_error) > error_threshold 
+            || std::abs(right_error) > error_threshold);
 
     fclose(log_file);
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {
     double kV = 1/MAX_VELOCITY;
-    //NEEDS TO BE TUNED, THERE ARE PROCEDURES ONLINE FOR HOW TO DO THIS
-    double kA = 0.35/MAX_ACCELERATION; //This value works quite well
-    double kP = 0.04; //0.05 also worked well
+    double kA = 0.35/MAX_ACCELERATION;
+    double kP = 0.04; 
     double kD = 0.012;
 
     double feedforward = kV * v + kA * a;
