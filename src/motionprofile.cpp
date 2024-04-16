@@ -38,8 +38,6 @@ void move_circular_arc(double x_goal, double v_start, double v_end, double headi
 }
 
 std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v_end, double heading_start, double heading_end, bool reverse) {
-    std::cout << "Started generating trajectory!" << std::endl;
-
     double v_reachable = std::sqrt(x_goal * MAX_ACCELERATION + 0.5 * v_start * v_start + 0.5 * v_end * v_end);
     double v_max = std::min(MAX_VELOCITY, v_reachable);
 

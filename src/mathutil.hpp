@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include "constants.hpp"
 
 inline int sgn(double x) {
     if (x > 0) {
