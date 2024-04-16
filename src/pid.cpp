@@ -20,8 +20,15 @@ void turn_to_heading(double heading_goal) {
     double power = 0;
     double power_prev = 0;
 
+    double time_elapsed_ms = 0;
+
+    FILE* log_file = fopen("/usd/pid-turn-data.txt", "w");
+    fprintf(log_file, "Time, Target Heading, Heading\n");
+
     do {
-        error = get_heading_difference(imu.get_heading(), heading_goal);
+        double heading = imu.get_heading();
+
+        error = get_heading_difference(heading, heading_goal);
 
         //Technically 12000 and LOOP_DELAY_SEC can be baked into the kP and kD terms
         power = (kP * error + kD * (error - error_prev) / LOOP_DELAY_SEC  + min_power) * 12000;
@@ -35,5 +42,14 @@ void turn_to_heading(double heading_goal) {
         power_prev = power;
 
         delay(LOOP_DELAY_MS);
-    } while (std::abs(error) > error_threshold || get_left_velocity() > 5 || get_right_velocity() > 5);
+        time_elapsed_ms += LOOP_DELAY_MS;
+
+        fprintf(log_file, "%f, %f, %f\n",
+            time_elapsed_ms, 
+            heading_goal, 
+            heading);
+
+    } while (std::abs(error) > error_threshold 
+            || get_left_velocity() > 5 
+            || get_right_velocity() > 5);
 }

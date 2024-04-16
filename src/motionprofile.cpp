@@ -74,7 +74,6 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
         }
         a = (v - v_prev) / LOOP_DELAY_SEC;
         x += (v + v_prev) * 0.5 * LOOP_DELAY_SEC;
-                
         heading = heading_start + heading_diff * t / t_total; 
         if (heading < 0) {
             heading += 360;
