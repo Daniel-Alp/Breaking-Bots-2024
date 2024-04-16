@@ -71,7 +71,7 @@ void competition_initialize() {
 }
 
 void autonomous() {
-    test_auton();
+    near_side_safe_AWP();
 }
 
 int map_joystick_input_to_power(double input) {

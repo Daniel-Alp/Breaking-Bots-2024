@@ -112,8 +112,8 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
     double time_elapsed_ms = 0;
 
     //The SD card must be plugged in, otherwise will get Data Abortion Exception
-    FILE* log_file = fopen("/usd/motion-profile-data.txt", "w");
-    fprintf(log_file, "Time, Target Left Vel, Left Vel, Target Right Vel, Right Vel, Target Heading, Heading\n");
+    // FILE* log_file = fopen("/usd/motion-profile-data.txt", "w");
+    // fprintf(log_file, "Time, Target Left Vel, Left Vel, Target Right Vel, Right Vel, Target Heading, Heading\n");
 
     do {
         Segment right_seg = right_traj[i];
@@ -145,20 +145,20 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
             break;
         }
 
-        fprintf(log_file, "%f, %f, %f, %f, %f, %f, %f\n", 
-            time_elapsed_ms, 
-            left_seg.v,  
-            get_left_velocity(), 
-            right_seg.v,
-            get_right_velocity(), 
-            right_seg.heading, 
-            heading);
+        // fprintf(log_file, "%f, %f, %f, %f, %f, %f, %f\n", 
+        //     time_elapsed_ms, 
+        //     left_seg.v,  
+        //     get_left_velocity(), 
+        //     right_seg.v,
+        //     get_right_velocity(), 
+        //     right_seg.heading, 
+        //     heading);
 
     } while(i < right_traj.size() 
             || std::abs(left_error) > ERROR_THRESHOLD 
             || std::abs(right_error) > ERROR_THRESHOLD);
 
-    fclose(log_file);
+    // fclose(log_file);
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {

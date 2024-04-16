@@ -6,14 +6,14 @@
 #include "mathutil.hpp"
 
 void turn_to_heading(double heading_goal) {
-    const double ERROR_THRESHOLD = 1;
+    const double ERROR_THRESHOLD = 1.5;
 
     //NEED TO BE TUNED
     const double MAX_VELOCITY_ANGULAR = 0.500;//Deg/ms
 
     const double kP = 0.080;
-    const double kD = 0.0085;
-    const double MIN_POWER = 0.01;
+    const double kD = 0.0080;
+    const double MIN_POWER = 0.001;
 
     double abs_start_heading_diff = std::abs(get_heading_difference(imu.get_heading(), heading_goal));
 
@@ -25,8 +25,8 @@ void turn_to_heading(double heading_goal) {
 
     double time_elapsed_ms = 0;
 
-    FILE* log_file = fopen("/usd/pid-turn-data.txt", "w");
-    fprintf(log_file, "Time, Target Heading, Heading\n");
+    // FILE* log_file = fopen("/usd/pid-turn-data.txt", "w");
+    // fprintf(log_file, "Time, Target Heading, Heading\n");
 
     do {
         double heading = imu.get_heading();
@@ -49,17 +49,17 @@ void turn_to_heading(double heading_goal) {
             break;
         }
 
-        fprintf(log_file, "%f, %f, %f\n",
-            time_elapsed_ms, 
-            heading_goal, 
-            heading);
+        // fprintf(log_file, "%f, %f, %f\n",
+        //     time_elapsed_ms, 
+        //     heading_goal, 
+        //     heading);
 
     } while (std::abs(error) > ERROR_THRESHOLD 
-            || get_left_velocity() > 6 
-            || get_right_velocity() > 6);
+            || get_left_velocity() > 10 
+            || get_right_velocity() > 10);
 
     move_voltage_left_drive(0);
     move_voltage_right_drive(0);
 
-    fclose(log_file);
+    // fclose(log_file);
 }
