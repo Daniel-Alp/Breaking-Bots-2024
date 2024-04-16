@@ -9,9 +9,9 @@ void turn_to_heading(double heading_goal) {
     double error_threshold = 0.5;
 
     //NEED TO BE TUNED
-    double kP = 0;
-    double kD = 0;
-    double min_power = 0;
+    double kP = 0.41;
+    double kD = 0.20;
+    double min_power = 0.05;
     double MAX_POWER_CHANGE = 12000;
 
     double error = 0;

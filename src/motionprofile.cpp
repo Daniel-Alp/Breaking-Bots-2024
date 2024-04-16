@@ -18,7 +18,7 @@ void move_circular_arc(double x_goal, double v_start, double v_end, double headi
 
     double heading_diff = get_heading_difference(heading_start, heading_end);
 
-    double scaling_factor = (x_goal - DRIVE_WIDTH * std::abs(heading_diff))/ x_goal;
+    double scaling_factor = (x_goal - DRIVE_WIDTH * std::abs(deg_to_rad(heading_diff)))/ x_goal;
 
     if (heading_diff > 0) { 
         for (Segment& seg : right_traj) {
@@ -116,7 +116,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
 
     //The SD card must be plugged in, otherwise will get Data Abortion Exception
     FILE* log_file = fopen("/usd/motion-profile-data.txt", "w");
-    fprintf(log_file, "Time, Target Left Vel, Actual Left Vel, Target Right Vel, Actual Right Vel, Target Heading, Actual Heading\n");
+    fprintf(log_file, "Time, Target Left Vel, Left Vel, Target Right Vel, Right Vel, Target Heading, Heading\n");
 
     do {
         Segment right_seg = right_traj[i];
@@ -142,11 +142,9 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
             i = right_traj.size() - 1;
         }
 
-        delay(LOOP_DELAY_MS);
+        pros::delay(LOOP_DELAY_MS);
         time_elapsed_ms += LOOP_DELAY_MS;
-        //Escape loop if we have spent 0.5s more on the motion than we should have. 
-        //Just in case the robot is almost at the goal position but not quite reaching it.
-        if (time_elapsed_ms > right_traj.size() * LOOP_DELAY_MS + 500) { 
+        if (time_elapsed_ms > right_traj.size() * LOOP_DELAY_MS + 150) { 
             break;
         }
 
