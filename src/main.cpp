@@ -142,10 +142,10 @@ void opcontrol() {
         } else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
             ratchetActive = true; 
             ratchet.set_value(1);   
-            timeHang += 2000; 
+            timeHang = 2000; 
         }
 
-        if (timeHang <= 0){
+        if (timeHang > 0){
             hang1.move(127); 
             hang2.move(127); 
         } else {
