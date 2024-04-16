@@ -6,12 +6,12 @@
 #include "mathutil.hpp"
 
 void turn_to_heading(double heading_goal) {
-    const double ERROR_THRESHOLD = 0.5;
+    const double ERROR_THRESHOLD = 2;
 
     //NEED TO BE TUNED
-    const double kP = 0.41;
-    const double kD = 0.20;
-    const double MIN_POWER = 0.05;
+    const double kP = 0.05;
+    const double kD = 0.0052;
+    const double MIN_POWER = 0.01;
     const double MAX_POWER_CHANGE = 12000;
 
     double error = 0;
@@ -50,8 +50,11 @@ void turn_to_heading(double heading_goal) {
             heading);
 
     } while (std::abs(error) > ERROR_THRESHOLD 
-            || get_left_velocity() > 5 
-            || get_right_velocity() > 5);
+            || get_left_velocity() > 2 
+            || get_right_velocity() > 2);
+
+    move_voltage_left_drive(0);
+    move_voltage_right_drive(0);
 
     fclose(log_file);
 }
