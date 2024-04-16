@@ -5,9 +5,9 @@
 
 //From -12000mV to 12000mV
 void move_voltage_right_drive(int voltage) {
-    r1.move_voltage(voltage);
-    r2.move_voltage(voltage);
-    r3.move_voltage(voltage);
+    r1.move_voltage(voltage * 0.94);
+    r2.move_voltage(voltage * 0.94);
+    r3.move_voltage(voltage * 0.94);
 }
 
 //From -12000mV to 12000mV
@@ -36,17 +36,17 @@ void tare_position_drive() {
 }
 
 double get_left_velocity() {
-    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * (l1.get_actual_velocity() / 60);
+    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * (l2.get_actual_velocity() / 60);
 }
 
 double get_right_velocity() {
-    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * (r1.get_actual_velocity() / 60);
+    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * (r2.get_actual_velocity() / 60);
 }
 
 double get_left_position() {
-    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * l1.get_position();
+    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * l2.get_position();
 }
 
 double get_right_position() {
-    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * r1.get_position();
+    return WHEEL_DIAM * PI * MOTOR_TO_WHEEL_RATIO * r2.get_position();
 }

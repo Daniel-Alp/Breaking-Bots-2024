@@ -20,7 +20,7 @@ Motor hang1(15);
 //5.5W motor
 Motor hang2(16);
 
-IMU imu(14);
+IMU imu(19);
 
 // Pneumatics objects
 pros::adi::DigitalOut ratchet('G');

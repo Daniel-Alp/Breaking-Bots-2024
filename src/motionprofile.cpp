@@ -6,8 +6,7 @@
 #include "drive.hpp"
 #include "mathutil.hpp"
 
-void move_straight(double x_goal, double v_start, double v_end, bool reverse) {
-    double heading = imu.get_heading();
+void move_straight(double x_goal, double v_start, double v_end, double heading, bool reverse) {
     std::vector<Segment> traj = generate_trajectory(x_goal, v_start, v_end, heading, heading, reverse);
     follow_trajectory(traj, traj);
 }
@@ -19,19 +18,19 @@ void move_circular_arc(double x_goal, double v_start, double v_end, double headi
 
     double heading_diff = get_heading_difference(heading_start, heading_end);
 
-    double scaling_factor = (x_goal - DRIVE_WIDTH * std::abs(heading_diff))/ x_goal;
+    const double SCALING_FACTOR = (x_goal - DRIVE_WIDTH * std::abs(deg_to_rad(heading_diff)))/ x_goal;
 
     if (heading_diff > 0) { 
         for (Segment& seg : right_traj) {
-            seg.x *= scaling_factor;
-            seg.v *= scaling_factor;
-            seg.a *= scaling_factor;
+            seg.x *= SCALING_FACTOR;
+            seg.v *= SCALING_FACTOR;
+            seg.a *= SCALING_FACTOR;
         }
     } else {
         for (Segment& seg : left_traj) {
-            seg.x *= scaling_factor;
-            seg.v *= scaling_factor;
-            seg.a *= scaling_factor;
+            seg.x *= SCALING_FACTOR;
+            seg.v *= SCALING_FACTOR;
+            seg.a *= SCALING_FACTOR;
         }
     }
 
@@ -73,34 +72,34 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
         } else {
             v = v_max - MAX_ACCELERATION * (t - t_speedup - t_cruise);
         }
-
         a = (v - v_prev) / LOOP_DELAY_SEC;
         x += (v + v_prev) * 0.5 * LOOP_DELAY_SEC;
-        
         heading = heading_start + heading_diff * t / t_total; 
         if (heading < 0) {
             heading += 360;
         }
 
-        if (reverse) {
-            traj.emplace_back(-x, -v, -a, heading);
-        } else {
-            traj.emplace_back(x, v, a, heading);
-        }
+        traj.emplace_back(x, v, a, heading);
 
         v_prev = v;
         t += LOOP_DELAY_SEC;
     }
-    traj.emplace_back(x_goal, v_end, (v_end - v_prev) / LOOP_DELAY_SEC, heading_end);
+    traj.emplace_back(x, v, 0, heading_end);
 
-    std::cout << "Finished generating trajectory!" << std::endl;
+    if (reverse) {
+        for (Segment& seg : traj) {
+            seg.x *= -1;
+            seg.v *= -1;
+            seg.a *= -1;
+        }
+    }
 
     return traj;
 }
 
 void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& left_traj) {
-    double error_threshold = 0.5; //NEEDS TO BE TUNED
-    double kP_turn = 0; //NEEDS TO BE TUNED
+    const double ERROR_THRESHOLD = 0.5;
+    const double kp_TURN = 0.002;
     
     tare_position_drive();
     
@@ -112,9 +111,9 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
     int i = 0;
     double time_elapsed_ms = 0;
 
-    //Log data for debugging and tuning.
-    FILE* log_file = fopen("/usd/motion-profile-data.csv", "w");
-    fprintf(log_file, "Time, Target Left Vel, Target Right Vel, Actual Left Vel, Actual Right Vel\n");
+    //The SD card must be plugged in, otherwise will get Data Abortion Exception
+    FILE* log_file = fopen("/usd/motion-profile-data.txt", "w");
+    fprintf(log_file, "Time, Target Left Vel, Left Vel, Target Right Vel, Right Vel, Target Heading, Heading\n");
 
     do {
         Segment right_seg = right_traj[i];
@@ -126,7 +125,8 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
         double right_power = calculate_power(right_error, right_error_prev, right_seg.v, right_seg.a);
         double left_power = calculate_power(left_error, left_error_prev, left_seg.v, left_seg.a);
 
-        double turn_power = kP_turn * get_heading_difference(imu.get_heading(), right_seg.heading);
+        double heading = imu.get_heading();
+        double turn_power = kp_TURN * get_heading_difference(heading, right_seg.heading) * 12000;
 
         move_voltage_right_drive(right_power - turn_power);
         move_voltage_left_drive(left_power + turn_power);
@@ -139,26 +139,33 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
             i = right_traj.size() - 1;
         }
 
-        delay(LOOP_DELAY_MS);
+        pros::delay(LOOP_DELAY_MS);
         time_elapsed_ms += LOOP_DELAY_MS;
-        //Escape loop if we have spent 0.5s more on the motion than we should have. 
-        //Just in case the robot is almost at the goal position but not quite reaching it.
-        if (time_elapsed_ms > right_traj.size() * LOOP_DELAY_MS + 500) { 
+        if (time_elapsed_ms > right_traj.size() * LOOP_DELAY_MS + 150) { 
             break;
         }
 
-        fprintf(log_file, "%f, %f, %f, %f, %f\n", time_elapsed_ms, right_traj[i], left_traj[i], get_right_velocity(), get_left_velocity());
-    } while(i < right_traj.size() || std::abs(left_error) > error_threshold || std::abs(right_error) > error_threshold);
+        fprintf(log_file, "%f, %f, %f, %f, %f, %f, %f\n", 
+            time_elapsed_ms, 
+            left_seg.v,  
+            get_left_velocity(), 
+            right_seg.v,
+            get_right_velocity(), 
+            right_seg.heading, 
+            heading);
+
+    } while(i < right_traj.size() 
+            || std::abs(left_error) > ERROR_THRESHOLD 
+            || std::abs(right_error) > ERROR_THRESHOLD);
 
     fclose(log_file);
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {
-    double kV = 1/MAX_VELOCITY;    
-    //NEEDS TO BE TUNED, THERE ARE PROCEDURES ONLINE FOR HOW TO DO THIS
-    double kA = 0;
-    double kP = 0;
-    double kD = 0;
+    const double kV = 1/MAX_VELOCITY;
+    const double kA = 0.35/MAX_ACCELERATION;
+    const double kP = 0.04; 
+    const double kD = 0.012;
 
     double feedforward = kV * v + kA * a;
     double feedback = kP * error + kD * ((error - error_prev) / LOOP_DELAY_SEC);
