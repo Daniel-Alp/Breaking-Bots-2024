@@ -6,13 +6,13 @@
 #include "mathutil.hpp"
 
 void turn_to_heading(double heading_goal) {
-    double error_threshold = 0.5;
+    const double ERROR_THRESHOLD = 0.5;
 
     //NEED TO BE TUNED
-    double kP = 0.41;
-    double kD = 0.20;
-    double min_power = 0.05;
-    double MAX_POWER_CHANGE = 12000;
+    const double kP = 0.41;
+    const double kD = 0.20;
+    const double MIN_POWER = 0.05;
+    const double MAX_POWER_CHANGE = 12000;
 
     double error = 0;
     double error_prev = 0;
@@ -31,7 +31,7 @@ void turn_to_heading(double heading_goal) {
         error = get_heading_difference(heading, heading_goal);
 
         //Technically 12000 and LOOP_DELAY_SEC can be baked into the kP and kD terms
-        power = (kP * error + kD * (error - error_prev) / LOOP_DELAY_SEC  + min_power) * 12000;
+        power = (kP * error + kD * (error - error_prev) / LOOP_DELAY_SEC  + MIN_POWER) * 12000;
         power = std::clamp(power, power - MAX_POWER_CHANGE, power + MAX_POWER_CHANGE);
         power = std::clamp(power, static_cast<double>(-12000), static_cast<double>(12000));
 
@@ -49,7 +49,7 @@ void turn_to_heading(double heading_goal) {
             heading_goal, 
             heading);
 
-    } while (std::abs(error) > error_threshold 
+    } while (std::abs(error) > ERROR_THRESHOLD 
             || get_left_velocity() > 5 
             || get_right_velocity() > 5);
 

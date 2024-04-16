@@ -18,19 +18,19 @@ void move_circular_arc(double x_goal, double v_start, double v_end, double headi
 
     double heading_diff = get_heading_difference(heading_start, heading_end);
 
-    double scaling_factor = (x_goal - DRIVE_WIDTH * std::abs(deg_to_rad(heading_diff)))/ x_goal;
+    const double SCALING_FACTOR = (x_goal - DRIVE_WIDTH * std::abs(deg_to_rad(heading_diff)))/ x_goal;
 
     if (heading_diff > 0) { 
         for (Segment& seg : right_traj) {
-            seg.x *= scaling_factor;
-            seg.v *= scaling_factor;
-            seg.a *= scaling_factor;
+            seg.x *= SCALING_FACTOR;
+            seg.v *= SCALING_FACTOR;
+            seg.a *= SCALING_FACTOR;
         }
     } else {
         for (Segment& seg : left_traj) {
-            seg.x *= scaling_factor;
-            seg.v *= scaling_factor;
-            seg.a *= scaling_factor;
+            seg.x *= SCALING_FACTOR;
+            seg.v *= SCALING_FACTOR;
+            seg.a *= SCALING_FACTOR;
         }
     }
 
@@ -98,8 +98,8 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
 }
 
 void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& left_traj) {
-    double error_threshold = 0.5;
-    double kP_turn = 0.002;
+    const double ERROR_THRESHOLD = 0.5;
+    const double kp_TURN = 0.002;
     
     tare_position_drive();
     
@@ -126,7 +126,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
         double left_power = calculate_power(left_error, left_error_prev, left_seg.v, left_seg.a);
 
         double heading = imu.get_heading();
-        double turn_power = kP_turn * get_heading_difference(heading, right_seg.heading) * 12000;
+        double turn_power = kp_TURN * get_heading_difference(heading, right_seg.heading) * 12000;
 
         move_voltage_right_drive(right_power - turn_power);
         move_voltage_left_drive(left_power + turn_power);
@@ -155,17 +155,17 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
             heading);
 
     } while(i < right_traj.size() 
-            || std::abs(left_error) > error_threshold 
-            || std::abs(right_error) > error_threshold);
+            || std::abs(left_error) > ERROR_THRESHOLD 
+            || std::abs(right_error) > ERROR_THRESHOLD);
 
     fclose(log_file);
 }
 
 double calculate_power(double error, double error_prev, double v, double a) {
-    double kV = 1/MAX_VELOCITY;
-    double kA = 0.35/MAX_ACCELERATION;
-    double kP = 0.04; 
-    double kD = 0.012;
+    const double kV = 1/MAX_VELOCITY;
+    const double kA = 0.35/MAX_ACCELERATION;
+    const double kP = 0.04; 
+    const double kD = 0.012;
 
     double feedforward = kV * v + kA * a;
     double feedback = kP * error + kD * ((error - error_prev) / LOOP_DELAY_SEC);
