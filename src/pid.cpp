@@ -52,4 +52,6 @@ void turn_to_heading(double heading_goal) {
     } while (std::abs(error) > error_threshold 
             || get_left_velocity() > 5 
             || get_right_velocity() > 5);
+
+    fclose(log_file);
 }
