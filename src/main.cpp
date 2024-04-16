@@ -86,6 +86,7 @@ void opcontrol() {
     
     bool ratchetActive = false; // If set to true then the ratchet is active, if set to false then the ratchet is not currently engaged 
     bool wingsActive = false; // If set to true then both wings will be triggered, otherwise both in
+    float timeHang = 0; 
 
     while(true) {
         // Intake controls 
@@ -132,12 +133,23 @@ void opcontrol() {
         }
         if(master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
             ratchetActive = false; 
+            ratchet.set_value(0); 
             hang_pd(PRESET_BICEP_ANGLE);
-
-        }
-        if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+        } else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
             ratchetActive = false; 
+            ratchet.set_value(0); 
             hang_pd(PRESET_SIDE_HANG_ANGLE);
+        } else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
+            ratchetActive = true; 
+            ratchet.set_value(1);   
+            timeHang += 2000; 
+        }
+
+        if (timeHang <= 0){
+            hang1.move(127); 
+            hang2.move(127); 
+        } else {
+            timeHang -= LOOP_DELAY_MS; 
         }
 
         // Main driver code 
