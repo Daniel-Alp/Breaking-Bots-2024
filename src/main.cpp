@@ -8,8 +8,8 @@
 #include "pros/misc.h"
 #include "hang.hpp"
 
-const float PRESET_BICEP_ANGLE = 100; 
-const float PRESET_SIDE_HANG_ANGLE = 100; 
+const float PRESET_BICEP_ANGLE = -130; 
+const float PRESET_SIDE_HANG_ANGLE = -20; 
 
 void initialize() {
     //Initialize drive motors
@@ -43,7 +43,7 @@ void initialize() {
     hang2.set_gearing(E_MOTOR_GEAR_200);
 
     hang1.set_reversed(false);
-    hang2.set_reversed(true);
+    hang2.set_reversed(false);
 
 
     //Initialize IMU
@@ -122,19 +122,22 @@ void opcontrol() {
         // Hang controls 
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
             hang1.move(127); 
-            hang2.move(-127); 
+            hang2.move(127); 
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
             hang1.move(-127); 
-            hang2.move(127); 
+            hang2.move(-127); 
         } else {
             hang1.move(0); 
             hang2.move(0); 
         }
         if(master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-            hang_pd(90);
+            ratchetActive = false; 
+            hang_pd(PRESET_BICEP_ANGLE);
+
         }
         if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-            hang_pd(180);
+            ratchetActive = false; 
+            hang_pd(PRESET_SIDE_HANG_ANGLE);
         }
 
         // Main driver code 
@@ -151,6 +154,9 @@ void opcontrol() {
 
         move_voltage_right_drive(right_power);
         move_voltage_left_drive(left_power);
+
+        float gearRatio = 12.0f/84.0f; 
+        master.print(0,0, "ANGLE: %f", gearRatio * hang1.get_position()); 
                                                                                                                                                                                                                                                                                                                                                                                              
         delay(LOOP_DELAY_MS);
     }
