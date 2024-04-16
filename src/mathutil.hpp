@@ -13,11 +13,11 @@ inline int sgn(double x) {
 }
 
 inline double rad_to_deg(double rad) {
-    return rad * PI / 180;
+    return rad * 180 / PI;
 }
 
 inline double deg_to_rad(double deg) {
-    return deg * 180 / PI;
+    return deg * PI / 180;
 }
 
 //Positive is clockwise, negative is counterclockwise
