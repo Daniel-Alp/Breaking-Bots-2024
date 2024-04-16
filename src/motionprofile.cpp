@@ -99,7 +99,7 @@ std::vector<Segment> generate_trajectory(double x_goal, double v_start, double v
 
 void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& left_traj) {
     const double ERROR_THRESHOLD = 0.5;
-    const double kp_TURN = 0.002;
+    const double kp_TURN = 0.1;
     
     tare_position_drive();
     
@@ -125,7 +125,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
         double right_power = calculate_power(right_error, right_error_prev, right_seg.v, right_seg.a);
         double left_power = calculate_power(left_error, left_error_prev, left_seg.v, left_seg.a);
 
-        double heading = imu.get_heading();
+        double heading = std::round(imu.get_heading());
         double turn_power = kp_TURN * get_heading_difference(heading, right_seg.heading) * 12000;
 
         move_voltage_right_drive(right_power - turn_power);

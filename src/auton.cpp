@@ -13,5 +13,5 @@ void test_auton() {
     move_straight(24, 0, 0, 0);
     move_straight(24, 0, 0, 0);
     move_straight(48, 0, 0, 0, true);
-    move_circular_arc(34.56, 0, 0, 0, 90);
+    move_circular_arc(68.33, 0, 0, 0, 90);
 }
