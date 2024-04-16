@@ -148,8 +148,9 @@ void opcontrol() {
         if (timeHang > 0){
             hang1.move(127); 
             hang2.move(127); 
-        } else {
             timeHang -= LOOP_DELAY_MS; 
+        } else {
+            timeHang = 0; 
         }
 
         // Main driver code 
