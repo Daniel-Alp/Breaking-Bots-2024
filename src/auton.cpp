@@ -7,6 +7,7 @@
 #include "pid.hpp"
 
 void near_side_safe_AWP() {
+    set_drive_brake_mode(MOTOR_BRAKE_HOLD); //Do not want to accidentally overshoot
     ratchet.set_value(0);
 
     //Raise hang to release the intake
@@ -43,24 +44,5 @@ void near_side_safe_AWP() {
 }
 
 void test_auton() {
-    // //Specify is reversed or not, default is not reversed.
-    // move_straight(72, 0, 0, 0);
-    // move_straight(72, 0, 0, 0, true);
-    // move_straight(24, 0, 0, 0);
-    // move_straight(24, 0, 0, 0);
-    // move_straight(48, 0, 0, 0, true);
-
-    set_drive_brake_mode(MOTOR_BRAKE_HOLD);
-
-    move_straight(24, 0, 0, 0);
-    move_straight(24, 0, 0, 0, true);
-
-    turn_to_heading(45);
-    pros::delay(500);
-    turn_to_heading(315);
-    pros::delay(500);
-    turn_to_heading(0);
-    // pros::delay(200);
-    // turn_to_heading(0);
-    // pros::delay(200);
+    
 }
