@@ -54,7 +54,7 @@ void five_ball_far_side_safe(){
     //Raise hang to release the intake
     hang1.move(-127);
     hang2.move(-127);
-    pros::delay(200);
+    pros::delay(1500);
 
     intake.move(127);
     hang1.move(127); 
@@ -64,12 +64,12 @@ void five_ball_far_side_safe(){
 
 
     // Move backwards 36 inches
-    move_straight(36, 0, 0, 0, true); 
+    move_straight(32, 0, 0, 0, true); 
     turn_to_heading(320); 
 
     // Turn to descoire 
     leftWing.set_value(1); 
-    move_straight(33.94, 0, 0, 315, true); 
+    move_straight(28, 0, 0, 330, true); 
 
     // Turn to push trballs 
     turn_to_heading(270); 
