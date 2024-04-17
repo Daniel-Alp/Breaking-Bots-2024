@@ -26,3 +26,6 @@ IMU imu(19);
 pros::adi::DigitalOut ratchet('G');
 pros::adi::DigitalOut leftWing('A'); 
 pros::adi::DigitalOut rightWing('F'); 
+
+const int RATCHET_ACTIVE = 1; 
+const int RATCHET_INACTIVE = 0; 

@@ -8,7 +8,7 @@
 
 void near_side_safe_AWP() {
     set_drive_brake_mode(MOTOR_BRAKE_HOLD); //Do not want to accidentally overshoot
-    ratchet.set_value(0);
+    ratchet.set_value(RATCHET_INACTIVE);
 
     //Raise hang to release the intake
     hang1.move(-127);
@@ -49,30 +49,34 @@ void near_side_safe_AWP() {
 */
 void five_ball_far_side_safe(){
     set_drive_brake_mode(MOTOR_BRAKE_HOLD); //Do not want to accidentally overshoot
-    ratchet.set_value(0);
+    ratchet.set_value(RATCHET_INACTIVE);
 
     //Raise hang to release the intake
     hang1.move(-127);
     hang2.move(-127);
-    pros::delay(1500);
+    pros::delay(500);
 
     intake.move(127);
     hang1.move(127); 
-    hang1.move(127); 
-
-    pros::delay(500); 
-
+    hang2.move(127); 
 
     // Move backwards 36 inches
     move_straight(32, 0, 0, 0, true); 
-    turn_to_heading(320); 
+    turn_to_heading(320); // Prepare heading to descore 
 
-    // Turn to descoire 
+    hang1.move(0); 
+    hang2.move(0); 
+    intake.move(0); 
+
+    // Turn to descore 
     leftWing.set_value(1); 
-    move_straight(28, 0, 0, 330, true); 
+    move_straight(33, 0, 0, 330, true); // Move back to descore 
 
-    // Turn to push trballs 
+    // Turn to push trballs
+    turn_to_heading(225); 
     turn_to_heading(270); 
+
+    leftWing.set_value(0); 
 
     move_straight(18, 0, MAX_VELOCITY, 270, true); 
 

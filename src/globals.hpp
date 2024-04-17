@@ -23,3 +23,6 @@ extern IMU imu;
 extern pros::adi::DigitalOut leftWing; 
 extern pros::adi::DigitalOut rightWing; 
 extern pros::adi::DigitalOut ratchet; 
+
+extern const int RATCHET_ACTIVE; 
+extern const int RATCHET_INACTIVE; 

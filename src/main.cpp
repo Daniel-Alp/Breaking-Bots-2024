@@ -104,9 +104,9 @@ void opcontrol() {
             ratchetActive = !ratchetActive; 
         }        
         if (ratchetActive){
-            ratchet.set_value(1); 
+            ratchet.set_value(RATCHET_ACTIVE); 
         } else {
-            ratchet.set_value(0); 
+            ratchet.set_value(RATCHET_INACTIVE); 
         }
         
         // Wings Activation 
@@ -134,15 +134,15 @@ void opcontrol() {
         }
         if(master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
             ratchetActive = false; 
-            ratchet.set_value(0); 
+            ratchet.set_value(RATCHET_INACTIVE); 
             hang_pd(PRESET_BICEP_ANGLE);
         } else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
             ratchetActive = false; 
-            ratchet.set_value(0); 
+            ratchet.set_value(RATCHET_INACTIVE); 
             hang_pd(PRESET_SIDE_HANG_ANGLE);
         } else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
             ratchetActive = true; 
-            ratchet.set_value(1);   
+            ratchet.set_value(RATCHET_ACTIVE);   
             timeHang = 2000; 
         }
 
