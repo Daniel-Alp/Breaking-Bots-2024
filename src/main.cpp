@@ -13,12 +13,12 @@ const float PRESET_SIDE_HANG_ANGLE = -20;
 
 void initialize() {
     //Initialize drive motors
-	r1.set_gearing(E_MOTOR_GEAR_600);
-    r2.set_gearing(E_MOTOR_GEAR_600);
-    r3.set_gearing(E_MOTOR_GEAR_600);
-    l1.set_gearing(E_MOTOR_GEAR_600);
-    l2.set_gearing(E_MOTOR_GEAR_600);
-    l3.set_gearing(E_MOTOR_GEAR_600);
+	r1.set_gearing(pros::E_MOTOR_GEAR_600);
+    r2.set_gearing(pros::E_MOTOR_GEAR_600);
+    r3.set_gearing(pros::E_MOTOR_GEAR_600);
+    l1.set_gearing(pros::E_MOTOR_GEAR_600);
+    l2.set_gearing(pros::E_MOTOR_GEAR_600);
+    l3.set_gearing(pros::E_MOTOR_GEAR_600);
 
     r1.set_reversed(false); 
     r2.set_reversed(false);
@@ -27,15 +27,15 @@ void initialize() {
     l2.set_reversed(true);
     l3.set_reversed(true);
 
-    r1.set_encoder_units(E_MOTOR_ENCODER_ROTATIONS);
-    r2.set_encoder_units(E_MOTOR_ENCODER_ROTATIONS);
-    r3.set_encoder_units(E_MOTOR_ENCODER_ROTATIONS);
-    l1.set_encoder_units(E_MOTOR_ENCODER_ROTATIONS);
-    l2.set_encoder_units(E_MOTOR_ENCODER_ROTATIONS);
-    l3.set_encoder_units(E_MOTOR_ENCODER_ROTATIONS);
+    r1.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    r2.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    r3.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    l1.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    l2.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
+    l3.set_encoder_units(pros::E_MOTOR_ENCODER_ROTATIONS);
 
     //Initialize intake motor
-    intake.set_gearing(E_MOTOR_GEAR_200);
+    intake.set_gearing(pros::E_MOTOR_GEAR_200);
     intake.set_reversed(true);
 
     //Initialize hang motors
