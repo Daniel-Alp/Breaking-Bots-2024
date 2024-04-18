@@ -141,7 +141,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
 
         pros::delay(LOOP_DELAY_MS);
         time_elapsed_ms += LOOP_DELAY_MS;
-        if (time_elapsed_ms > right_traj.size() * LOOP_DELAY_MS + 500) { 
+        if (time_elapsed_ms > right_traj.size() * LOOP_DELAY_MS + 200) { 
             break;
         }
 

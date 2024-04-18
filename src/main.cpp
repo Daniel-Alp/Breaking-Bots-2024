@@ -72,7 +72,9 @@ void competition_initialize() {
 
 void autonomous() {
     // near_side_safe_AWP();
-    five_ball_far_side_safe(); 
+    // five_ball_far_side_safe(); 
+    // far_side_safe_awp(); 
+    far_side_five_ball(); 
 }
 
 int map_joystick_input_to_power(double input) {
@@ -128,10 +130,16 @@ void opcontrol() {
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
             hang1.move(-127); 
             hang2.move(-127); 
+        } else if (timeHang > 0){
+            hang1.move(127); 
+            hang2.move(127); 
+            timeHang -= LOOP_DELAY_MS; 
         } else {
+            timeHang = 0; 
             hang1.move(0); 
             hang2.move(0); 
         }
+
         if(master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
             ratchetActive = false; 
             ratchet.set_value(RATCHET_INACTIVE); 
@@ -140,19 +148,14 @@ void opcontrol() {
             ratchetActive = false; 
             ratchet.set_value(RATCHET_INACTIVE); 
             hang_pd(PRESET_SIDE_HANG_ANGLE);
-        } else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
+        } 
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
             ratchetActive = true; 
             ratchet.set_value(RATCHET_ACTIVE);   
-            timeHang = 2000; 
+            timeHang = 2500; 
         }
 
-        if (timeHang > 0){
-            hang1.move(127); 
-            hang2.move(127); 
-            timeHang -= LOOP_DELAY_MS; 
-        } else {
-            timeHang = 0; 
-        }
+
 
         // Main driver code 
         int linear_input = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);

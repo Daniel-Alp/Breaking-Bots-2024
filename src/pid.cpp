@@ -5,7 +5,7 @@
 #include "drive.hpp"
 #include "mathutil.hpp"
 
-void turn_to_heading(double heading_goal) {
+void turn_to_heading(double heading_goal, double buffer) {
     const double ERROR_THRESHOLD = 1.5;
 
     //NEED TO BE TUNED
@@ -45,7 +45,7 @@ void turn_to_heading(double heading_goal) {
         delay(LOOP_DELAY_MS);
         time_elapsed_ms += LOOP_DELAY_MS;
 
-        if (time_elapsed_ms > abs_start_heading_diff / MAX_VELOCITY_ANGULAR + 1000) {
+        if (time_elapsed_ms > abs_start_heading_diff / MAX_VELOCITY_ANGULAR + buffer) {
             break;
         }
 
@@ -65,7 +65,7 @@ void turn_to_heading(double heading_goal) {
 }
 
 //Hold one side stationary while turning the other side
-void swing_to_heading(double heading_goal, bool swing_right_side) {
+void swing_to_heading(double heading_goal, bool swing_right_side, double buffer) {
     const double ERROR_THRESHOLD = 1.5;
 
     //NEED TO BE TUNED
@@ -104,7 +104,7 @@ void swing_to_heading(double heading_goal, bool swing_right_side) {
         delay(LOOP_DELAY_MS);
         time_elapsed_ms += LOOP_DELAY_MS;
 
-        if (time_elapsed_ms > abs_start_heading_diff / MAX_VELOCITY_ANGULAR + 1000) {
+        if (time_elapsed_ms > abs_start_heading_diff / MAX_VELOCITY_ANGULAR + buffer) {
             break;
         }
 
