@@ -358,30 +358,45 @@ void far_side_five_ball(){
 
 void near_side_heavy(){
     ratchet.set_value(0); 
+    rightWing.set_value(1);
     set_drive_brake_mode(MOTOR_BRAKE_HOLD); 
     release_intake();
-     
-    lower_hang(); 
 
-    intake.move(127); 
+    intake.move(127);      
+    lower_hang(); 
+    rightWing.set_value(0);
+
     move_straight(54, 0, 0, 0, false); 
 
-    turn_to_heading(90-12); 
-    move_straight(20, 0, 0, 90-10, false); 
+    turn_to_heading(88-12); 
+    move_straight(20, 0, 0, 88-10, false); 
 
-    swing_to_heading(35, false);
-    move_straight(52, 0, 0, 35, true);  
+    swing_to_heading(30, false);
+    move_straight(48, 0, 0, 35, true);  
 
     leftWing.set_value(1); 
-    swing_to_heading(270, false); 
+    swing_to_heading(300, false); 
+    move_straight(10, 0, 0, 300, true); 
+    swing_to_heading(255, false); 
+    leftWing.set_value(0);
+    turn_to_heading(165);
+    pros::delay(750);
+    turn_to_heading(80);
 
-    leftWing.set_value(0); 
+    intake.move(-127);
+    move_straight(30, 0, 0, false);
 
-    move_straight(40, 0, 0, 270, true); 
+    //Push descore and under-hang-pipe triball to the other side
+    // turn_to_heading(258); 
+    // move_straight(18, 0, 0, true);
 
-    move_voltage_left_drive(0); 
-    move_voltage_right_drive(0); 
+    // move_voltage_left_drive(0); 
+    // move_voltage_right_drive(0); 
 
+    // //Turn around and spit out triball that was intaken
+    // turn_to_heading(78);
+    // intake.move(-127);
+    // pros::delay(500);
 }
 
 void test_auton() {

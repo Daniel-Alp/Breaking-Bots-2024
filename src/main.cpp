@@ -74,7 +74,7 @@ void autonomous() {
     // near_side_safe_AWP();
     // five_ball_far_side_safe(); 
     // far_side_safe_awp(); 
-    far_side_five_ball(); 
+    near_side_heavy(); 
 }
 
 int map_joystick_input_to_power(double input) {
