@@ -412,7 +412,33 @@ void near_side_heavy(){
 }
 
 void far_side_four_ball_rush() {
+    release_intake();
+    lower_hang();
+
+    // Rush first triball
+    intake.move(127);
+    move_straight(90, 0, 0, 0, false);
+
+    // Spit it out
+    turn_to_heading(100);
+    intake.move(-127);
+    pros::delay(400);
     
+    // Rush the second triball
+    turn_to_heading(280);
+    intake.move(127);
+    move_straight(20, 0, 0, 280, false);
+
+    // Ram the first triball
+    move_straight(36, 0, 0, 280, true);
+
+    // Ram second triball
+    move_straight(10, 0, 0, 280, false);
+    turn_to_heading(100);
+    move_straight(12, 0, 0, 100, false);
+
+    // :-)
+
 }
 
 // /*
