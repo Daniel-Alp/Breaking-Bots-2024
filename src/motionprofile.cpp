@@ -141,7 +141,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
 
         pros::delay(LOOP_DELAY_MS);
         time_elapsed_ms += LOOP_DELAY_MS;
-        if (time_elapsed_ms > right_traj.size() * LOOP_DELAY_MS + 200) { 
+        if (time_elapsed_ms > right_traj.size() * LOOP_DELAY_MS + 400) { 
             break;
         }
 
@@ -157,7 +157,7 @@ void follow_trajectory(std::vector<Segment>& right_traj, std::vector<Segment>& l
     } while(i < right_traj.size() 
             || std::abs(left_error) > ERROR_THRESHOLD 
             || std::abs(right_error) > ERROR_THRESHOLD);
-
+    
     // fclose(log_file);
 }
 

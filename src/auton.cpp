@@ -24,18 +24,24 @@ void stop_hang(){
     hang2.move(0); 
 }
 
+/*
+    Near side AWP route
+    3 balls(1 in net, 2 on the other side)
+*/
 void near_side_safe_AWP() {
     set_drive_brake_mode(MOTOR_BRAKE_HOLD); //Do not want to accidentally overshoot
     ratchet.set_value(RATCHET_INACTIVE);
 
     //Raise hang to release the intake
     release_intake(); 
+    intake.move(127);
 
     //Lower hang in parallel with deploying wing
     lower_hang(); 
     leftWing.set_value(1);
     pros::delay(500);
     stop_hang(); 
+    intake.move(0);
 
     //Descore triball from matchload zone
     move_straight(18, 0, 0, 0, true);
@@ -43,23 +49,29 @@ void near_side_safe_AWP() {
     leftWing.set_value(0);
 
     pros::delay(500); 
-    turn_to_heading(180); 
+    turn_to_heading(350); 
 
     //Move backwards to score alliance triball
-    move_straight(25, 0, 0, 0, true);
+    move_straight(23, 0, 0, 0, false);
+    turn_to_heading(45);
+    intake.move(-127);
+    pros::delay(400);
     turn_to_heading(225);
-    move_straight(4, 0, MAX_VELOCITY, 0, true);
+    move_straight(8, 0, MAX_VELOCITY, 0, true);
 
     //Move to touch hang bar
     move_voltage_left_drive(0);
     move_voltage_right_drive(0);
     move_straight(4, 0, MAX_VELOCITY, 0, false);
     turn_to_heading(180);
-    move_straight(23, 0, 0, 0, false);
-    turn_to_heading(135);
+    move_straight(25, 0, 0, 0, false);
+    turn_to_heading(145);
+    leftWing.set_value(1);
 
     intake.move(-127); 
-    move_straight(34, 0, 0, 0, false);
+    move_straight(35, 0, 0, 0, false);
+    move_voltage_left_drive(0);
+    move_voltage_right_drive(0);
 }
 
 /*
@@ -398,6 +410,41 @@ void near_side_heavy(){
     // intake.move(-127);
     // pros::delay(500);
 }
+
+void far_side_four_ball_rush() {
+    
+}
+
+// /*
+//     Commnet
+// */
+// void new_far_side_5_balls() {
+//     release_intake();
+//     lower_hang();
+//     intake.move(127);
+//     move_straight(1, 0, 0, 0, false);
+
+//     // Go to the net
+//     move_straight(36, 0, 0, 0, true);
+//     turn_to_heading(315);
+//     move_straight(28, 0, 0, 225, true);
+    
+//     // Ram triballs
+//     turn_to_heading(270);
+//     move_straight(22, 0, 0, 270, true);
+//     move_straight(10, 0, 0, 270, false);
+
+//     // Ram intake triball
+//     turn_to_heading(90);
+//     intake.move(-127);
+//     move_straight(14, 0, 0, 90, false);
+
+//     // Descore triball   
+//     // move_straight(22, 0, 0, 270, false);
+//     // swing_to_heading(315, false);
+//     // rightWing.set_value(1);
+
+// }
 
 void test_auton() {
     

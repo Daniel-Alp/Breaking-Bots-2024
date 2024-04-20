@@ -14,3 +14,5 @@ void far_side_safe_awp_2();
 void near_side_heavy(); 
 
 void far_side_five_ball(); 
+
+void new_far_side_5_balls();
