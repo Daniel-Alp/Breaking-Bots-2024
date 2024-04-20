@@ -75,7 +75,6 @@ void autonomous() {
     // five_ball_far_side_safe(); 
     // far_side_safe_awp(); 
     // near_side_safe_AWP(); 
-    new_far_side_5_balls();
 }
 
 int map_joystick_input_to_power(double input) {
@@ -85,12 +84,30 @@ int map_joystick_input_to_power(double input) {
     return input;
 }
 
+//Negative inertia accumulator based on team 254F-Daniel Alp DOES NOT WORK
+// double adjust_turn_power(double turn_power, double prev_turn_power, double& neg_inertia_accumulator) {
+//     double neg_inertia = turn_power - prev_turn_power;
+
+//     neg_inertia_accumulator += neg_inertia;
+//     if (neg_inertia_accumulator > 0) {
+//         neg_inertia_accumulator--;
+//     } else if (neg_inertia_accumulator < 0) {
+//         neg_inertia_accumulator++;
+//     }
+
+//     return turn_power + neg_inertia_accumulator;
+// }
+
 void opcontrol() {
     set_drive_brake_mode(E_MOTOR_BRAKE_COAST);
     
     bool ratchetActive = false; // If set to true then the ratchet is active, if set to false then the ratchet is not currently engaged 
     bool wingsActive = false; // If set to true then both wings will be triggered, otherwise both in
     float timeHang = 0; 
+
+    double negative_inertia_accumulator = 0;
+    double turn_power = 0;
+    double prev_turn_power = 0;
 
     while(true) {
         // Intake controls 
@@ -156,14 +173,17 @@ void opcontrol() {
             timeHang = 2500; 
         }
 
-
-
         // Main driver code 
         int linear_input = master.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
         int turn_input = master.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
 
-        int right_power = map_joystick_input_to_power(linear_input - turn_input);
-        int left_power = map_joystick_input_to_power(linear_input + turn_input);
+        double linear_power = map_joystick_input_to_power(linear_input);
+        turn_power = map_joystick_input_to_power(turn_input);
+        // turn_power = adjust_turn_power(turn_power, prev_turn_power, negative_inertia_accumulator);
+        prev_turn_power = turn_power;
+
+        int right_power = linear_power - turn_power;
+        int left_power = linear_power + turn_power;
 
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			right_power *= 0.44;
