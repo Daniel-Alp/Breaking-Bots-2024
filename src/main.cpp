@@ -71,10 +71,14 @@ void competition_initialize() {
 }
 
 void autonomous() {
+    // Near Side Safe 
     // near_side_safe_AWP();
-    // five_ball_far_side_safe(); 
+    // Far Side Safe  
     // far_side_safe_awp(); 
-    // near_side_safe_AWP(); 
+    // Near side rush 
+    // near_side_heavy();
+    // Far Side Rush
+     
 }
 
 int map_joystick_input_to_power(double input) {

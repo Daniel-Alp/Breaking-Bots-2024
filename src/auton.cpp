@@ -157,6 +157,7 @@ void five_ball_far_side_safe(){
 /*
 * Safe side 3 ball autonomous 
 * Starts on tile (4,0)
+* Touches pipe at the end 
 */
 void far_side_safe_awp(){
     set_drive_brake_mode(MOTOR_BRAKE_HOLD); //Do not want to accidentally overshoot
@@ -367,7 +368,9 @@ void far_side_five_ball(){
     
 
 }
-
+/*
+* Near side rush AWP 
+*/
 void near_side_heavy(){
     ratchet.set_value(0); 
     rightWing.set_value(1);
@@ -411,6 +414,9 @@ void near_side_heavy(){
     // pros::delay(500);
 }
 
+/*
+* Far Side Rush 
+*/
 void far_side_four_ball_rush() {
     release_intake();
     lower_hang();
