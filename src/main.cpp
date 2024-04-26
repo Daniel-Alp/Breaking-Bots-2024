@@ -7,6 +7,7 @@
 #include "auton.hpp"
 #include "pros/misc.h"
 #include "hang.hpp"
+#include "pros/motors.h"
 
 const float PRESET_BICEP_ANGLE = -130; 
 const float PRESET_SIDE_HANG_ANGLE = -20; 
@@ -74,11 +75,12 @@ void autonomous() {
     // Near Side Safe 
     // near_side_safe_AWP();
     // Far Side Safe  
-    // far_side_safe_awp(); 
+    far_side_safe_awp(); 
     // Near side rush 
     // near_side_heavy();
     // Far Side Rush
-     
+    // Far side Safe triball only TWO 
+    // far_side_safe_two_triball(); 
 }
 
 int map_joystick_input_to_power(double input) {
@@ -107,6 +109,8 @@ void opcontrol() {
     
     bool ratchetActive = false; // If set to true then the ratchet is active, if set to false then the ratchet is not currently engaged 
     bool wingsActive = false; // If set to true then both wings will be triggered, otherwise both in
+    bool intakeActive = false; 
+    bool intakeReversed = false; 
     float timeHang = 0; 
 
     double negative_inertia_accumulator = 0;
@@ -115,10 +119,20 @@ void opcontrol() {
 
     while(true) {
         // Intake controls 
-        if (master.get_digital(E_CONTROLLER_DIGITAL_L1)){
-            intake.move(-127); 
-        } else if (master.get_digital(E_CONTROLLER_DIGITAL_L2)){
+        if (master.get_digital_new_press(E_CONTROLLER_DIGITAL_L1)){
+            // intake.move(-127); 
+            intakeActive = !intakeActive; 
+        } 
+        if (master.get_digital(E_CONTROLLER_DIGITAL_L2)){
+            // intake.move(127); 
+            intakeReversed = true;   
+        } else {
+            intakeReversed = false; 
+        }
+        if(intakeActive == true && intakeReversed == false){
             intake.move(127); 
+        } else if (intakeActive == true && intakeReversed == true){
+            intake.move(-127); 
         } else {
             intake.move(0); 
         }
@@ -147,12 +161,18 @@ void opcontrol() {
 
         // Hang controls 
         if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+            hang1.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD); 
+            hang2.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD); 
             hang1.move(127); 
             hang2.move(127); 
         } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+            hang1.set_brake_mode(pros::E_MOTOR_BRAKE_COAST); 
+            hang2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             hang1.move(-127); 
             hang2.move(-127); 
         } else if (timeHang > 0){
+            hang1.set_brake_mode(pros::E_MOTOR_BRAKE_COAST); 
+            hang2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             hang1.move(127); 
             hang2.move(127); 
             timeHang -= LOOP_DELAY_MS; 
@@ -164,14 +184,20 @@ void opcontrol() {
 
         if(master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
             ratchetActive = false; 
+            hang1.set_brake_mode(pros::E_MOTOR_BRAKE_COAST); 
+            hang2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             ratchet.set_value(RATCHET_INACTIVE); 
             hang_pd(PRESET_BICEP_ANGLE);
         } else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+            hang1.set_brake_mode(pros::E_MOTOR_BRAKE_COAST); 
+            hang2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             ratchetActive = false; 
             ratchet.set_value(RATCHET_INACTIVE); 
             hang_pd(PRESET_SIDE_HANG_ANGLE);
         } 
         if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){
+            hang1.set_brake_mode(pros::E_MOTOR_BRAKE_COAST); 
+            hang2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
             ratchetActive = true; 
             ratchet.set_value(RATCHET_ACTIVE);   
             timeHang = 2500; 
@@ -198,8 +224,7 @@ void opcontrol() {
         move_voltage_left_drive(left_power);
 
         float gearRatio = 12.0f/84.0f; 
-        master.print(0,0, "ANGLE: %f", gearRatio * hang1.get_position()); 
-                                                                                                                                                                                                                                                                                                                                                                                             
+        master.print(0,0, "ANGLE: %f", gearRatio * hang1.get_position());                                                                                                                                                                                                                                                                                                                                                                                          
         delay(LOOP_DELAY_MS);
     }
 }

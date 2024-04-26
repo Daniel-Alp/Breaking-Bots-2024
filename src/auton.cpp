@@ -231,6 +231,73 @@ void far_side_safe_awp(){
     move_voltage_right_drive(0); 
 }
 
+/*
+* Clone of previous route just without the 3rd triball to safely touch the bar :) 
+*/
+void far_side_safe_two_triball(){
+    set_drive_brake_mode(MOTOR_BRAKE_HOLD); //Do not want to accidentally overshoot
+    ratchet.set_value(RATCHET_INACTIVE);
+
+    //Raise hang to release the intake
+    intake.move(127);
+    release_intake(); 
+
+    lower_hang(); 
+
+    /*Move forward and back to intake for sure*/
+    move_straight(0.9, 0, 0, 0, false); 
+
+    /*Move back with the one triball on the back of the bot after intaking the alliance triball*/
+    move_straight(34, 0, 0, 0, true); 
+    swing_to_heading(320, false); // heading for descore position  
+    stop_hang(); // Stop moving the hang 
+    intake.move(0); 
+
+    /*
+    * Descoring the triball 
+    */
+    move_straight(14, 0, 0, 320, true); // Move back to descore 
+    swing_to_heading(270, false, 400); 
+
+    /*
+    * This part of the motion shooots the triball to the net by swinging 
+    */
+    // turn_to_heading(225); 
+    // turn_to_heading(270); 
+    turn_to_heading(280, 200); 
+    
+    /*
+    * This part of the motion is when we ram into the net with 2 triballs 
+    */
+    double rearPushAngle = 300.0f; 
+    move_straight(18, 0, MAX_VELOCITY, rearPushAngle, true); // Move into the net at a slight angle with  rear of robot 
+
+    // Move away from net 
+    move_straight(9, 0, 0, rearPushAngle, false); 
+    
+    // Now ram triballl inside intake 
+    turn_to_heading(110); 
+    move_straight(18, 0, MAX_VELOCITY, 110, false); 
+
+    // Move back for final triball grap 
+    move_straight(18, 0, 0, 110, true);
+
+    // FINAL SECTION 
+    double finalTurnAngle = 0.0f;
+    turn_to_heading(finalTurnAngle); // point to the last triball 
+    intake.move(-127); 
+
+    // Head to triball 
+    move_straight(53, 0, 0, finalTurnAngle, false); 
+
+    // just in case we missed 
+    move_voltage_left_drive(1000); 
+    move_voltage_right_drive(1000); 
+    pros::delay(1000);  
+    move_voltage_left_drive(0); 
+    move_voltage_right_drive(0); 
+}
+
 void far_side_safe_awp_2(){
     set_drive_brake_mode(MOTOR_BRAKE_HOLD); //Do not want to accidentally overshoot
     ratchet.set_value(RATCHET_INACTIVE);
@@ -369,7 +436,7 @@ void far_side_five_ball(){
 
 }
 /*
-* Near side rush AWP 
+* Near side rush AWP tries to move one trball away and push 3 into our side 
 */
 void near_side_heavy(){
     ratchet.set_value(0); 
@@ -399,7 +466,9 @@ void near_side_heavy(){
     turn_to_heading(80);
 
     intake.move(-127);
-    move_straight(30, 0, 0, false);
+    move_straight(34, 0, 0, false);
+    move_voltage_left_drive(0); 
+    move_voltage_right_drive(0); 
 
     //Push descore and under-hang-pipe triball to the other side
     // turn_to_heading(258); 

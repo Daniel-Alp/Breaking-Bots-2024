@@ -13,7 +13,7 @@ Motor l2(17);
 Motor l3(10);
 
 //5.5W motor
-Motor intake(13); 
+Motor intake(14); 
 
 //11W motor
 Motor hang1(15); 
